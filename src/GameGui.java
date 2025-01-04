@@ -3,16 +3,19 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class GameGui extends JFrame {
-    static Icon Image1 = new ImageIcon("1.png");
-    static Icon Image2 = new ImageIcon("2.png");
-    static Icon Image3 = new ImageIcon("3.png");
-    static Icon Image4 = new ImageIcon("4.png");
-    static Icon Image5 = new ImageIcon("5.png");
-    static Icon Image6 = new ImageIcon("6.png");
+    Icon[] nerdImages = {
+            new ImageIcon("1.png"),
+            new ImageIcon("2.png"),
+            new ImageIcon("3.png"),
+            new ImageIcon("4.png"),
+            new ImageIcon("5.png"),
+            new ImageIcon("6.png"),
+    };
     State state;
     JButton[][] buttons;
-    JPanel game, southNerdPanel, northNerdPanel;
-    JButton southNerd, northNerd;
+    JPanel game, southPanel;
+    JButton nerdButton;
+    JLabel turnLabel;
     int ran = 0;
 
     GameGui(State state) {
@@ -20,52 +23,29 @@ public class GameGui extends JFrame {
         createGrid();
         refresh_stones();
 
-        game.setBounds(0, 40, 15 * 40, 15 * 40);
-        northNerdPanel = new JPanel(new FlowLayout());
-        northNerdPanel.setBounds(20, 0, 15 * 40, 20);
-        southNerdPanel = new JPanel(new FlowLayout());
-        southNerdPanel.setBounds(15 * 50 + 20, 0, 15 * 50, 20);
-        southNerd = new JButton();
-        southNerd.setBackground(Color.white);
-        southNerd.setBounds(15 * 15, 0, 20, 20);
-        southNerd.setSize(20, 20);
-        northNerd = new JButton();
-        northNerd.setBackground(Color.GRAY);
-        northNerd.setSize(20, 20);
-        northNerdPanel.add(northNerd);
-        southNerdPanel.add(southNerd);
-        northNerd.addActionListener(e -> {
-            if (state.turn == 1) {
-//                System.out.println(state);
-                ran = state.getNerdNumber();
-                changeNerd(ran, false);
-            }
+        southPanel = new JPanel(new FlowLayout());
+        nerdButton = new JButton();
+        nerdButton.setPreferredSize(new Dimension(40, 40));
+
+        turnLabel = new JLabel("NEXT Turn: " + (state.turn));
+
+        southPanel.add(nerdButton);
+        southPanel.add(turnLabel);
+
+        nerdButton.addActionListener(e -> {
+            ran = state.getNerdNumber();
+            changeNerd(ran);
+
         });
-        southNerd.addActionListener(e -> {
-            if (state.turn == 0) {
-                ran = state.getNerdNumber();
-                changeNerd(ran, true);
-            }
-        });
-        this.add(northNerdPanel, BorderLayout.NORTH);
-        this.add(southNerdPanel, BorderLayout.SOUTH);
+
+        this.add(southPanel, BorderLayout.SOUTH);
         this.add(game, BorderLayout.CENTER);
-        this.setBounds(200, 0, 15 * 40, 15 * 40 + 20 * 2);
+
+        this.setBounds(200, 0, 15 * 40, 15 * 40 + 50);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
-    //TODO
-    public void movement(int i, int j) {
-        if (!state.checkExist(i, j)) return;
-        if (!buttons[i][j].getText().equals("")) {
-            int x = Integer.parseInt(buttons[i][j].getText());
-            //if the cell has more than one stone
-            while (x > 8) x /= 10;
-            state.move(x, ran);
-            refresh_stones();
-        }
-    }
 
 
     public void createGrid() {
@@ -77,12 +57,12 @@ public class GameGui extends JFrame {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
                 buttons[i][j] = new JButton();
-                if(i == 15 ){
+                if (i == 15) {
                     buttons[i][j].setText(String.valueOf(j));
                     game.add(buttons[i][j]);
                     continue;
                 }
-                if(j == 15){
+                if (j == 15) {
                     buttons[i][j].setText(String.valueOf(i));
                     game.add(buttons[i][j]);
                     continue;
@@ -131,76 +111,21 @@ public class GameGui extends JFrame {
         }
     }
 
-    //this function for changing the nerd between the two players
-    public void changeNerd(int ran, boolean x) {
-        if (x) {
-            northNerd.setBackground(Color.GRAY);
-            northNerd.setIcon(null);
-        } else {
-            southNerd.setBackground(Color.GRAY);
-            southNerd.setIcon(null);
+    public void movement(int i, int j) {
+        if (!state.checkExist(i, j)) return;
+        for(Stone s : state.stones){
+            if(s.i == i && s.j == j){
+                state.move(s.id, ran);
+                refresh_stones();
+                return;
+            }
         }
-        switch (ran) {
-            case 1: {
-                if (x)
-                    southNerd.setIcon(Image1);
-                else
-                    northNerd.setIcon(Image1);
-                break;
-            }
-            case 2: {
-                if (x)
-                    southNerd.setIcon(Image2);
+    }
 
-                else
-                    northNerd.setIcon(Image2);
-
-                break;
-            }
-
-            case 3: {
-                if (x)
-                    southNerd.setIcon(Image3);
-
-                else
-                    northNerd.setIcon(Image3);
-
-                break;
-            }
-
-            case 4: {
-                if (x)
-                    southNerd.setIcon(Image4);
-
-                else
-                    northNerd.setIcon(Image4);
-
-                break;
-            }
-            case 5: {
-                if (x)
-                    southNerd.setIcon(Image5);
-
-                else
-                    northNerd.setIcon(Image5);
-
-                break;
-            }
-            case 6: {
-                if (x) {
-                    northNerd.setBackground(Color.GRAY);
-                    northNerd.setIcon(null);
-                    southNerd.setIcon(Image6);
-                } else {
-                    southNerd.setBackground(Color.GRAY);
-                    southNerd.setIcon(null);
-                    northNerd.setIcon(Image6);
-                }
-                break;
-            }
-            default:
-                break;
-        }
+    public void changeNerd(int num) {
+        nerdButton.setBackground(Color.GRAY);
+        nerdButton.setIcon(null);
+        nerdButton.setIcon(nerdImages[num - 1]);
     }
 
     public void refresh_stones() {
@@ -209,12 +134,16 @@ public class GameGui extends JFrame {
                 buttons[i][j].setText("");
             }
         }
-        //add the number of stones to the grid
         for (Stone s : state.stones) {
-            String text = Integer.toString(s.id);
+            StringBuilder text = new StringBuilder();
+            text.append(s.id);
             if (!buttons[s.i][s.j].getText().isEmpty())
-                text += buttons[s.i][s.j].getText();
-            buttons[s.i][s.j].setText(text);
+                text.append(s.id);
+            buttons[s.i][s.j].setText(text.toString());
         }
     }
+
+
+
+
 }
