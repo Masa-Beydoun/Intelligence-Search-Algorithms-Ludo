@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -20,12 +19,13 @@ public class State {
 //        System.out.println(players);
     }
 
-    public State(List<Player> players, int turn, boolean played,int comeFrom) {
+    public State(List<Player> players, int turn, boolean played, int comeFrom) {
         this.comeFrom = comeFrom;
         this.players = players;
         this.turn = turn;
         this.played = played;
     }
+
     public boolean thereIsMove(int ran) {
         return players.get(turn).thereIsMove(ran);
         //TODO in player class
@@ -50,35 +50,24 @@ public class State {
         return ran;
     }
 
-    public State move(int id, int ran) {
+    public State move(int stoneId, int ran) {
         System.out.println();
-        Stone s = players.get(turn).stones[id];
-        boolean flag = (s.id <= 3 && turn == 0);
-        flag = flag || (s.id >= 4 && s.id <= 7 && turn == 1);
-        flag = flag || (s.id >= 8 && s.id <= 11 && turn == 2);
-        flag = flag || (s.id >= 12 && turn == 3);
-//        if (!flag) {
-//            System.out.println("player does not match turn");
-//            System.out.println();
-//            System.out.println();
-//            return null;
-//        }
+
 
         //create new state
         State newState = new State(ran);
 
         newState.players = List.copyOf(players);
-        newState.turn=turn;
-        newState.played=false;
+        newState.turn = turn;
+        newState.played = false;
 
-        boolean canMove = newState.players.get(turn).stones[id].move(ran,turn);
-        if (!canMove) {
-            System.out.println("stone can't move");
+        //calling the move function in Player class , then in stone class
+        MoveType canMove2 = newState.players.get(turn).move(stoneId,ran,true);
+        if (canMove2 == MoveType.CANT_MOVE) {
             return null;
         }
-        System.out.println("the stone has moved to new place " + newState.players.get(turn).stones[id]);
         newState.played = true;
-        if (ran != 6) newState.turn = (turn + 1) % 4;
+        if (ran != 6 || canMove2 != MoveType.ENTERED_THE_KITCHEN) newState.turn = (turn + 1) % 4;
         return newState;
 
     }
@@ -124,11 +113,10 @@ public class State {
         return result;
     }
 
-    public boolean checkGoal(){
-        for(Player p : players){
-            for(Stone s : p.stones){
-                if(!s.finished)
-                    return false;
+    public boolean checkGoal() {
+        for (Player p : players) {
+            if(!p.stones.isEmpty()){
+                return false;
             }
         }
         return true;

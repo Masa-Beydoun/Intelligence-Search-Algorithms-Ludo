@@ -40,29 +40,26 @@ public class GameGui extends JFrame {
         nerdButton.addActionListener(e -> nerdActionListener());
         this.add(southPanel, BorderLayout.SOUTH);
         this.add(game, BorderLayout.CENTER);
-        this.setBounds(0, 0, 15 * 50, 15 * 50 + 50);
+        this.setBounds(0, 0, 15 * 52, 15 * 50 + 50);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
     public void nerdActionListener() {
-//            System.out.println("previous state played : " + state.isPlayed());
         if (!state.played) return;
-        state.supposedToDo(); //printing logs
+//        state.supposedToDo(); //printing logs
         ran = state.getNerdNumber();
         nerdButton.setIcon(nerdImages[ran - 1]);
         if (state.played) {
             turnLabel.setText("NEXT Turn: " + (state.turn));
         }
-        System.out.println("state after the nerd");
-        System.out.println(state);
-//            System.out.println("turn in GameGui nerd is " +state.turn);
-
     }
 
     public void refresh_stones() {
         System.out.println("refresh stones");
         System.out.println(state);
+        System.out.println();
+        System.out.println();
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 buttons[i][j].setText("");
@@ -72,12 +69,7 @@ public class GameGui extends JFrame {
 
         for (Player player : state.players) {
             for (Stone s : player.stones) {
-//                StringBuilder text = new StringBuilder();
-//                text.append(s.id);
-//                if (!buttons[s.i][s.j].getText().isEmpty())
-//                    text.append(s.id);
-//                buttons[s.i][s.j].setText(text.toString());
-                buttons[s.position.i][s.position.j].setIcon(stonesImages[player.id]);
+               buttons[s.position.i][s.position.j].setIcon(stonesImages[player.id]);
             }
         }
 
@@ -146,7 +138,6 @@ public class GameGui extends JFrame {
     }
 
     public void move(int i, int j) {
-        System.out.println("state in move");
         System.out.println(state);
         if (state.played) {
             System.out.println("already did the move");
