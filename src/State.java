@@ -137,7 +137,7 @@ public class State {
                 for (Stone otherStone : player2.stones) {
                     if (playerTurnStone.position.equals(otherStone.position)) {
                         if (otherStone.locked) continue;
-                        otherStone.updateLocationById(player2.playerID);
+                        otherStone.updateLocationForKill(player2.playerID);
                         return true;
                     }
                 }

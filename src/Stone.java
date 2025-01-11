@@ -11,23 +11,23 @@ public class Stone {
         this.locked = locked;
     }
 
-    public void updateLocationById(int playerID) {
-        if (playerID == 0) {
+    public void updateLocationForKill(int turn) {
+        if (turn == 0) {
             if (id == 0) position = new Position(1, 1);
             if (id == 1) position = new Position(1, 4);
             if (id == 2) position = new Position(4, 1);
             if (id == 3) position = new Position(4, 4);
-        } else if (playerID == 1) {
+        } else if (turn == 1) {
             if (id == 0) position = new Position(1, 10);
             if (id == 1) position = new Position(1, 13);
             if (id == 2) position = new Position(4, 10);
             if (id == 3) position = new Position(4, 13);
-        } else if (playerID == 2) {
+        } else if (turn == 2) {
             if (id == 0) position = new Position(13, 13);
             if (id == 1) position = new Position(13, 10);
             if (id == 2) position = new Position(10, 10);
             if (id == 3) position = new Position(10, 13);
-        } else if (playerID == 3) {
+        } else if (turn == 3) {
             if (id == 0) position = new Position(10, 1);
             if (id == 1) position = new Position(10, 4);
             if (id == 2) position = new Position(13, 4);
