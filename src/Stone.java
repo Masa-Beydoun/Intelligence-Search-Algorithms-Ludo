@@ -89,8 +89,9 @@ public class Stone {
             if (flag) {
                 alive = false;
                 position = pos;
-                return MoveType.ENTERED_THE_KITCHEN;
+
             }
+            return MoveType.ENTERED_THE_KITCHEN;
         }
         if (flag) {
             position = pos;
