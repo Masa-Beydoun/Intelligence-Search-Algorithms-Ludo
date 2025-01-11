@@ -130,6 +130,7 @@ public class Stone {
         newPos.j = position.j;
 
         newPos.newPosition(ran);
+
         return newPos;
     }
 

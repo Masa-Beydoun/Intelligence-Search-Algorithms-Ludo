@@ -33,12 +33,11 @@ public class Player {
         }
     }
 
-
     public void updateLocked() {
-        if(!stones.isEmpty())stones.get(0).updateLocked();
-        if(stones.size()>1)stones.get(1).updateLocked();
-        if(stones.size()>2)stones.get(2).updateLocked();
-        if(stones.size()>3)stones.get(3).updateLocked();
+        if (!stones.isEmpty()) stones.get(0).updateLocked();
+        if (stones.size() > 1) stones.get(1).updateLocked();
+        if (stones.size() > 2) stones.get(2).updateLocked();
+        if (stones.size() > 3) stones.get(3).updateLocked();
         for (Stone s1 : stones) {
             for (Stone s2 : stones) {
                 if (s1.id != s2.id && s1.position.i == s2.position.i
@@ -52,7 +51,7 @@ public class Player {
 
     public boolean thereIsMove(int ran) {
         List<Stone> newStones = new ArrayList<>();
-        for(Stone s :stones){
+        for (Stone s : stones) {
             newStones.add(new Stone(s.id, s.position, s.alive, s.locked));
         }
 
@@ -66,13 +65,13 @@ public class Player {
         return false;
     }
 
-    public MoveType move(int stoneId,int ran,boolean flag){
+    public MoveType move(int stoneId, int ran, boolean flag) {
         MoveType type = stones.get(stoneId).fullMove(ran, this.playerID, flag);
-        if(type == MoveType.CANT_MOVE){
+        if (type == MoveType.CANT_MOVE) {
             System.out.println("stone can't move");
             return MoveType.CANT_MOVE;
         }
-        if(stones.get(stoneId).checkInKitchen(this.playerID,stones.get(stoneId).position)){
+        if (stones.get(stoneId).checkInKitchen(this.playerID, stones.get(stoneId).position)) {
             stones.remove(getStoneById(stoneId));
             System.out.println("stone entered the kitchen");
             return MoveType.ENTERED_THE_KITCHEN;
@@ -92,7 +91,7 @@ public class Player {
         return null;
     }
 
-    public Stone getStoneById(int id){
+    public Stone getStoneById(int id) {
         for (Stone s : stones) {
             if (s.id == id) {
                 return s;

@@ -47,7 +47,6 @@ public class GameGui extends JFrame {
 
     public void nerdActionListener() {
         if (!state.played) return;
-//        state.supposedToDo(); //printing logs
         ran = state.getNerdNumber();
         nerdButton.setIcon(nerdImages[ran - 1]);
         if (state.played) {
