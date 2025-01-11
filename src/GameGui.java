@@ -31,7 +31,7 @@ public class GameGui extends JFrame {
     GameGui(State state) {
         this.state = state;
         createGrid();
-        refresh_stones();
+        refreshStones();
         southPanel = new JPanel(new FlowLayout());
         nerdButton.setPreferredSize(new Dimension(40, 40));
         turnLabel = new JLabel("NEXT Turn: " + (state.turn));
@@ -55,7 +55,7 @@ public class GameGui extends JFrame {
         }
     }
 
-    public void refresh_stones() {
+    public void refreshStones() {
         System.out.println("refresh stones");
         System.out.println(state);
         System.out.println();
@@ -69,7 +69,7 @@ public class GameGui extends JFrame {
 
         for (Player player : state.players) {
             for (Stone s : player.stones) {
-               buttons[s.position.i][s.position.j].setIcon(stonesImages[player.id]);
+               buttons[s.position.i][s.position.j].setIcon(stonesImages[player.playerID]);
             }
         }
 
@@ -96,7 +96,7 @@ public class GameGui extends JFrame {
                 buttons[i][j].setText("");
                 int finalI = i;
                 int finalJ = j;
-                buttons[i][j].addActionListener(e -> move(finalI, finalJ));
+                buttons[i][j].addActionListener(e -> moveListener(finalI, finalJ));
 
                 if ((i == 7 && j >= 1 && j <= 5) || (i == 6 && j == 1)) buttons[i][j].setBackground(Color.red);
                 else if ((i == 7 && j >= 9 && j <= 13) || (i == 8 && j == 13))
@@ -137,7 +137,7 @@ public class GameGui extends JFrame {
         }
     }
 
-    public void move(int i, int j) {
+    public void moveListener(int i, int j) {
         System.out.println(state);
         if (state.played) {
             System.out.println("already did the move");
@@ -165,7 +165,7 @@ public class GameGui extends JFrame {
 
         turnLabel.setText("NEXT Turn: " + (state.turn));
 
-        refresh_stones();
+        refreshStones();
     }
 }
 
