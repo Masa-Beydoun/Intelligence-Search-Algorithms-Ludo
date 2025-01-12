@@ -89,7 +89,6 @@ public class Stone {
             if (flag) {
                 alive = false;
                 position = pos;
-
             }
             return MoveType.ENTERED_THE_KITCHEN;
         }
@@ -100,9 +99,7 @@ public class Stone {
         return MoveType.MOVED;
     }
 
-    //gets where the stone goes
     public Position move(int ran, int turn, boolean flag) {
-        // parameters = ran : random nerd number , turn : whose turn , flag : do i want to make the move or only check it.
         if (!alive && ran == 6) {
             System.out.println("not alive random 6");
             Position pos = makeAlive(turn);

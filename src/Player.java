@@ -3,8 +3,8 @@ import java.util.List;
 
 public class Player {
 
-    public List<Stone> stones = new ArrayList<>();
     int playerID;
+    public List<Stone> stones = new ArrayList<>();
 
     public Player(int playerID) {
         this.playerID = playerID;
@@ -56,9 +56,9 @@ public class Player {
         }
 
         for (Stone s : newStones) {
-            MoveType movee = s.fullMove(ran, playerID, false);
-            System.out.println(movee);
-            if (movee == MoveType.MOVED || movee == MoveType.ENTERED_THE_KITCHEN) {
+            MoveType moveType = s.fullMove(ran, playerID, false);
+            System.out.println(moveType);
+            if (moveType == MoveType.MOVED || moveType == MoveType.ENTERED_THE_KITCHEN) {
                 return true;
             }
         }

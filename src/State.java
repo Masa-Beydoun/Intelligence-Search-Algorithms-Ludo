@@ -5,10 +5,10 @@ import java.util.Random;
 
 public class State {
 
-    List<Player> players = List.of(new Player(0), new Player(1), new Player(2), new Player(3));
     int turn = 0;
     boolean played = true;
     Integer comeFrom;
+    List<Player> players = List.of(new Player(0), new Player(1), new Player(2), new Player(3));
 
     public State(Integer comeFrom) {
         this.comeFrom = comeFrom;
@@ -44,10 +44,7 @@ public class State {
     }
 
     public State move(int stoneId, int ran) {
-
-
         State newState = new State(List.copyOf(players), turn, false, ran);
-
         MoveType canMove2 = newState.players.get(turn).move(stoneId, ran, true);
         if (canMove2 == MoveType.CANT_MOVE) {
             return null;
@@ -58,24 +55,20 @@ public class State {
         } else newState.turn = (turn + 1) % 4;
         System.out.println(nextStates(turn));
         return newState;
-
     }
 
     public List<State> nextStates(int turn) {
-
         List<State> nextStatesList = new ArrayList<>();
         for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
-            for(Stone s : players.get(turn).stones){
+            for (Stone s : players.get(turn).stones) {
                 State newState = new State(List.copyOf(players), turn, false, nerdNumber);
                 MoveType canMove2 = newState.players.get(turn).move(s.id, nerdNumber, true);
                 if (canMove2 == MoveType.CANT_MOVE) continue;
-
                 newState.played = true;
                 boolean killed = killStone();
                 if (nerdNumber == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed) {
-                }
-                else newState.turn = (turn + 1) % 4;
-                nextStatesList.add( newState);
+                } else newState.turn = (turn + 1) % 4;
+                nextStatesList.add(newState);
             }
         }
         return nextStatesList;
