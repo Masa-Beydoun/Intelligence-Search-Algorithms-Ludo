@@ -46,8 +46,9 @@ public class Algorithm {
             List<State> nextStates = state.nextStates(turn);
             double probability = 1.0 / 6;
             for (State nextState : nextStates) {
-                chance += probability * expectimax(nextState, depth - 1, nextState.turn);
+                chance += probability * expectimax(nextState, depth + 1, nextState.turn);
             }
+            chance /= nextStates.size();
 
             return chance;
         }
