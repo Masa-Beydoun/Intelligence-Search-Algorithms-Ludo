@@ -145,10 +145,10 @@ public class GameGui extends JFrame {
         }
         System.out.println("cell in " + i + " " + j + " have been clicked");
 
-        Stone s = state.players.get(state.turn).getStoneInPlace(i, j);
-        if (s == null) return;
+        List<Stone> s = state.players.get(state.turn).getStoneInPlace(i, j);
+        if (s.isEmpty()) return;
         System.out.println("stone in place " + s);
-        State state1 = state.move(s.id, ran);
+        State state1 = state.move(s.get(0).id, ran);
         if (state1 == null) return;
         System.out.println("state 1 is played : " + state1.played);
         if (!state1.played) return;

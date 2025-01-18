@@ -81,14 +81,14 @@ public class Player {
         return MoveType.MOVED;
     }
 
-    public Stone getStoneInPlace(int i, int j) {
+    public List<Stone> getStoneInPlace(int i, int j) {
+        List<Stone> stonesInPlace = new ArrayList<>();
         for (Stone s : stones) {
             if (s.position.i == i && s.position.j == j) {
-                return s;
+                stonesInPlace.add(s);
             }
         }
-        System.out.println("no stone in this place");
-        return null;
+        return stonesInPlace;
     }
 
     public Stone getStoneById(int id) {

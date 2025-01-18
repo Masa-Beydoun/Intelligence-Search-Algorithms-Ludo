@@ -25,6 +25,16 @@ public class State {
         return players.get(turn).thereIsMove(ran);
     }
 
+
+    public int getStoneInPlace(int i,int j){
+        players.get(0).getStoneInPlace(i,j);
+        players.get(1).getStoneInPlace(i,j);
+        players.get(2).getStoneInPlace(i,j);
+        players.get(3).getStoneInPlace(i,j);
+        return -1;
+
+    }
+
     public int getNerdNumber() {
         played = false;
         Random r = new Random();

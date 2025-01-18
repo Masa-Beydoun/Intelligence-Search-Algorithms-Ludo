@@ -1,3 +1,5 @@
+import java.util.Map;
+
 public class Stone {
     int id;
     Position position;
@@ -69,17 +71,15 @@ public class Stone {
         locked = false;
     }
 
+    private static final Map<Integer, Position> KITCHEN_POSITIONS = Map.of(
+            0, new Position(7, 6),
+            1, new Position(6, 7),
+            2, new Position(7, 8),
+            3, new Position(8, 7)
+    );
+
     public boolean checkInKitchen(int turn, Position pos) {
-        if (turn == 0 && (pos.i == 7 && pos.j == 6)) {
-            return true;
-        } else if (turn == 1 && (pos.i == 6 && pos.j == 7)) {
-            return true;
-        } else if (turn == 2 && (pos.i == 7 && pos.j == 8)) {
-            return true;
-        } else if (turn == 3 && (pos.i == 8 && pos.j == 7)) {
-            return true;
-        }
-        return false;
+        return pos.equals(KITCHEN_POSITIONS.get(turn));
     }
 
     public MoveType fullMove(int ran, int turn, boolean flag) {

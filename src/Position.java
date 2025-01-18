@@ -6,6 +6,95 @@ public class Position {
         this.j = j;
     }
 
+    private void checkCell(int i, int j) {
+
+    }
+
+    public void getPrevious6Cells(int i, int j){
+        if (i == 7 && j == 0) {
+            i=8;
+            while(j <= 5){
+                checkCell(i,j);
+                j++;
+            }
+        } else if (i == 7 && j == 14) {
+            i=6;
+            while(j >=8){
+                checkCell(i,j);
+                j--;
+            }
+        } else if (j == 7 && i == 14){
+            j=8;
+            while(i>=9){
+                checkCell(i,j);
+                i--;
+            }
+        } else if (j == 7 && i == 0){
+            j=8;
+            while(i<=5){
+                checkCell(i,j);
+                i++;
+            }
+        }
+        //////////////////////////
+        if(j == 6 && i >=9) {
+            i++;
+            while(i<=14){
+                checkCell(i,j);
+                i++;
+            }
+            checkCell(14,6);
+            checkCell(14,7);
+            checkCell(14,8);
+            i=14;
+            j=8;
+            while (i>=9){
+                checkCell(i,j);
+                i--;
+            }
+        }else if(i==8 && j <= 5){
+            while(j<=5){
+                checkCell(i,j);
+                j++;
+            }
+            i=9;
+            j=6;
+            while(i<=14){
+                checkCell(i,j);
+                i++;
+            }
+        }else if(i == 6 && j <= 5){
+            j--;
+            while(j>=0){
+                checkCell(i,j);
+                i--;
+            }
+            checkCell(6,0);
+            checkCell(6,1);
+            checkCell(6,2);
+            i=8;
+            j=0;
+            while(j<=5){
+                checkCell(i,j);
+                j++;
+            }
+        } else if(j==6 && i <=5){
+            while(i<=5){
+                checkCell(i,j);
+                i++;
+            }
+            i=6;
+            j=5;
+            while(j>=0){
+                checkCell(i,j);
+                j--;
+            }
+        }
+    }
+
+
+
+
     public void newPosition(int ran) {
 
         if (i == 0) {
