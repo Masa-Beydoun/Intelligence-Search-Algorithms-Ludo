@@ -101,7 +101,7 @@ public class Stone {
 
     public Position move(int ran, int turn, boolean flag) {
         if (!alive && ran == 6) {
-            System.out.println("not alive random 6");
+//            System.out.println("not alive random 6");
             Position pos = makeAlive(turn);
             if (flag) {
                 alive = true;
@@ -110,10 +110,10 @@ public class Stone {
             return pos;
         }
         if (!alive && ran != 6) {
-            System.out.println("not alive random not 6");
+//            System.out.println("not alive random not 6");
             return new Position(-1, -1);
         }
-        System.out.println("checking new position");
+//        System.out.println("checking new position");
         Position newPos = new Position(position.i, position.j);
         newPos.checkRestTillKitchen(ran, turn);
         if (newPos.equals(new Position(-1, -1))) return newPos;

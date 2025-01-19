@@ -153,7 +153,7 @@ public class GameGui extends JFrame {
         System.out.println("state 1 is played : " + state1.played);
         if (!state1.played) return;
 
-        this.state = new State(ran);
+        this.state = new State(null);
         state.players = List.copyOf(state1.players);
         state.turn = state1.turn;
 
@@ -164,6 +164,7 @@ public class GameGui extends JFrame {
 
         turnLabel.setText("NEXT Turn: " + (state.turn));
 
+//        System.out.println("next states \n " +state.nextStates());
         refreshStones();
     }
 }

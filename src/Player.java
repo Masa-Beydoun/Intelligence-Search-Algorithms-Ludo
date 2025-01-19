@@ -57,7 +57,6 @@ public class Player {
 
         for (Stone s : newStones) {
             MoveType moveType = s.fullMove(ran, playerID, false);
-            System.out.println(moveType);
             if (moveType == MoveType.MOVED || moveType == MoveType.ENTERED_THE_KITCHEN) {
                 return true;
             }
@@ -66,14 +65,14 @@ public class Player {
     }
 
     public MoveType move(int stoneId, int ran, boolean flag) {
-        MoveType type = stones.get(stoneId).fullMove(ran, this.playerID, flag);
+        MoveType type = getStoneById(stoneId).fullMove(ran, this.playerID, flag);
         if (type == MoveType.CANT_MOVE) {
-            System.out.println("stone can't move");
+//            System.out.println("stone can't move");
             return MoveType.CANT_MOVE;
         }
         if (stones.get(stoneId).checkInKitchen(this.playerID, stones.get(stoneId).position)) {
             stones.remove(getStoneById(stoneId));
-            System.out.println("stone entered the kitchen");
+//            System.out.println("stone entered the kitchen");
             return MoveType.ENTERED_THE_KITCHEN;
         }
         System.out.println("the stone has moved to new place " + getStoneById(stoneId));
