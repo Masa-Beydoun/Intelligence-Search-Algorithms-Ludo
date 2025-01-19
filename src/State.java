@@ -21,8 +21,8 @@ public class State {
         this.parent = parent;
     }
 
-    public boolean thereIsMove(int ran) {
-        return players.get(turn).thereIsMove(ran);
+    public boolean thereIsMove(int ran,List<Stone> stones) {
+        return players.get(turn).thereIsMove(ran,stones);
     }
 
 
@@ -52,8 +52,9 @@ public class State {
         while ((ran = r.nextInt(7)) == 0) {
         }
         System.out.println("nerd  : " + ran);
-        System.out.println("there is move  : " + thereIsMove(ran));
-        if (!thereIsMove(ran)) {
+        List<Stone> stones = getOtherStones();
+        System.out.println("there is move  : " + thereIsMove(ran,stones));
+        if (!thereIsMove(ran,stones)) {
             turn = (turn + 1) % 4;
             played = true;
             return ran;
@@ -65,7 +66,8 @@ public class State {
 
     public State move(int stoneId, int ran) {
         State newState = new State(List.copyOf(players), turn, false,this);
-        MoveType canMove2 = newState.players.get(turn).move(stoneId, ran, true);
+
+        MoveType canMove2 = newState.players.get(turn).move(stoneId, ran, true,getOtherStones());
         if (canMove2 == MoveType.CANT_MOVE) {
             return null;
         }
@@ -84,7 +86,7 @@ public class State {
         for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
             for (Stone s : players.get(turn).stones) {
                 State newState = new State(List.copyOf(players), turn, false,this);
-                MoveType canMove2 = newState.players.get(turn).move(s.id, nerdNumber, true);
+                MoveType canMove2 = newState.players.get(turn).move(s.id, nerdNumber, true,getOtherStones());
                 if (canMove2 == MoveType.CANT_MOVE) continue;
                 newState.played = true;
                 boolean killed = killStone();
@@ -162,6 +164,18 @@ public class State {
         } else if (turn == 3) {
             System.out.println("supposed to do is BLUE");
         }
+    }
+
+
+    public List<Stone> getOtherStones(){
+        List<Stone> stones = new ArrayList<>();
+        for(Player p : players) {
+            if(p.playerID == turn) continue;
+            for(Stone stone : p.stones){
+                stones.add(stone);
+            }
+        }
+        return stones;
     }
 
 
