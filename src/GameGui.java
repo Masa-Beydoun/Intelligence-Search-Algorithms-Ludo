@@ -160,8 +160,7 @@ public class GameGui extends JFrame {
 
         this.state.played = true;
 
-        System.out.println("the move have been processed in GameGui class");
-
+        System.out.println(Heuristic.inDangerStones(state));
         turnLabel.setText("NEXT Turn: " + (state.turn));
 
 //        System.out.println("next states \n " +state.nextStates());

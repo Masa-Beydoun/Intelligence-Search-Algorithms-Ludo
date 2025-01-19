@@ -8,7 +8,7 @@ public class Position {
         this.j = j;
     }
 
-    private boolean checkCell(int i, int j, List<Stone> stoneList) {
+    private boolean checkCoupleCell(int i, int j, List<Stone> stoneList) {
         int count = 0;
         for (Stone stone : stoneList) {
             if (stone.position.i == i && stone.position.j == j) {
@@ -17,153 +17,155 @@ public class Position {
         }
         return !(count > 1);
     }
+    private boolean checkSingleCell(int i, int j, List<Stone> stoneList) {
+        for (Stone stone : stoneList) {
+            if (stone.position.i == i && stone.position.j == j) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public boolean getPrevious6Cells(int i, int j, List<Stone> stoneList) {
-        boolean flag = false;
+        boolean flag = true;
         if (i == 7 && j == 0) {
             i = 8;
             while (j <= 5) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 j++;
             }
-        } else if (i == 7 && j == 14) {
+        }  // true
+        else if (i == 7 && j == 14) {
             i = 6;
-            while (j >= 8) {
-                flag |= checkCell(i, j, stoneList);
+            while (j >= 9) {
+                flag &= checkSingleCell(i, j, stoneList);
                 j--;
             }
-        } else if (j == 7 && i == 14) {
+        }  // true
+        else if (i == 14 && j == 7 ) {
             j = 8;
             while (i >= 9) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 i--;
             }
-        } else if (j == 7 && i == 0) {
+        } //true
+        else if (i == 0 && j == 7) {
             j = 6;
             while (i <= 5) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 i++;
             }
-        }
+        } //true
         ////////////////////////////////////////////
-        if (j == 6 && i >= 9) {
-            i++;
+        else if (i >= 9 && j == 6) {
             while (i <= 14) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 i++;
             }
-            flag |= checkCell(14, 6, stoneList);
-            flag |= checkCell(14, 7, stoneList);
-            flag |= checkCell(14, 8, stoneList);
+            flag &= checkSingleCell(14, 6, stoneList);
+            flag &= checkSingleCell(14, 7, stoneList);
+            flag &= checkSingleCell(14, 8, stoneList);
+
             i = 14;
             j = 8;
             while (i >= 9) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 i--;
             }
-            /////
-        } else if (i == 8 && j <= 5) {
-            j++;
+        }  // true
+        else if (i == 8 && j <= 5) {
             while (j <= 5) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 j++;
             }
             i = 9;
             j = 6;
             while (i <= 14) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 i++;
             }
-            /////////
-        } else if (i == 6 && j <= 5) {
-            j--;
+        }  // true
+        else if (i == 6 && j <= 5) {
             while (j >= 0) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 j--;
             }
-            flag |= checkCell(6, 0, stoneList);
-            flag |= checkCell(7, 0, stoneList);
-            flag |= checkCell(8, 0, stoneList);
+            flag &= checkSingleCell(6, 0, stoneList);
+            flag &= checkSingleCell(7, 0, stoneList);
+            flag &= checkSingleCell(8, 0, stoneList);
             i = 8;
             j = 0;
             while (j <= 5) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 j++;
             }
-            ////////////
-        } else if (j == 6 && i <= 5) {
-            i++;
+        }  // true
+        else if (i <= 5 && j == 6) {
             while (i <= 5) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 i++;
             }
             i = 6;
             j = 5;
             while (j >= 0) {
-                flag |= checkCell(i, j, stoneList);
+                flag &= checkSingleCell(i, j, stoneList);
                 j--;
             }
-            ////////
-        } else if (j == 8 && i <= 5) {
-            i++;
-            while (i <= 5) {
-                flag |= checkCell(i, j, stoneList);
-                i++;
-            }
-            i = 6;
-            j = 9;
-            while (j <= 14) {
-                flag |= checkCell(i, j, stoneList);
-                j++;
-            }
-            ///////////
-        } else if (i == 6 && j >= 7) {
-            j++;
-            while (j <= 14) {
-                flag |= checkCell(i, j, stoneList);
-                j++;
-            }
-            flag |= checkCell(6, 14, stoneList);
-            flag |= checkCell(7, 14, stoneList);
-            flag |= checkCell(8, 14, stoneList);
-            i = 8;
-            j = 14;
-            while (j >= 9) {
-                flag |= checkCell(i, j, stoneList);
-                j--;
-            }
-            //////////////
-
-        } else if (i == 8 && j >= 7) {
-            j--;
-            while (j >= 9) {
-                flag |= checkCell(i, j, stoneList);
-                j--;
-            }
-            i = 9;
-            j = 8;
-            while (i <= 14) {
-                flag |= checkCell(i, j, stoneList);
-                i++;
-            }
-            //////////////
-        } else if (j == 8 && i >= 7) {
-            i++;
-            while (i <= 14) {
-                flag |= checkCell(i, j, stoneList);
-                i++;
-            }
-            flag |= checkCell(14, 8, stoneList);
-            flag |= checkCell(14, 9, stoneList);
-            flag |= checkCell(14, 10, stoneList);
-            i = 14;
-            j = 6;
-            while (i >= 9) {
-                flag |= checkCell(i, j, stoneList);
+        }  // true
+        else if (i <= 5 && j == 8) {
+            while (i >= 0) {
+                flag &= checkSingleCell(i, j, stoneList);
                 i--;
             }
-            //////////////////////////
-        }
+            flag &= checkSingleCell(0, 8, stoneList);
+            flag &= checkSingleCell(0, 7, stoneList);
+            flag &= checkSingleCell(0, 6, stoneList);
+            i = 0;
+            j = 6;
+            while (i <= 5) {
+                flag &= checkSingleCell(i, j, stoneList);
+                i++;
+            }
+        }  // true
+        else if (i == 6 && j >= 9) {
+            while (j >= 9) {
+                flag &= checkSingleCell(i, j, stoneList);
+                j--;
+            }
+            i = 5;
+            j = 8;
+            while (i >= 0) {
+                flag &= checkSingleCell(i, j, stoneList);
+                i--;
+            }
+
+        }  // true
+        else if (i == 8 && j >= 9) {
+            while (j <= 14) {
+                flag &= checkSingleCell(i, j, stoneList);
+                j++;
+            }
+            i = 6;
+            j = 14;
+            flag &= checkSingleCell(7, 14, stoneList);
+            while (j >= 9) {
+                flag &= checkSingleCell(i, j, stoneList);
+                j--;
+            }
+            //////////////
+        }  // true
+        else if (i >= 9 && j == 8) {
+            while (i >= 9) {
+                flag &= checkSingleCell(i, j, stoneList);
+                i--;
+            }
+            i = 8;
+            j = 9;
+            while (j <= 14) {
+                flag &= checkSingleCell(i,j, stoneList);
+                j++;
+            }
+        }  // true
         return flag;
     }
 
@@ -174,13 +176,13 @@ public class Position {
             System.out.println("case 1");
             while (ran != 0) {
                 if (j != 6) {
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     j++;
                     if (j == 6) {
                         i = 5;
                     }
                 } else {
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     i--;
                 }
                 ran--;
@@ -190,17 +192,17 @@ public class Position {
             System.out.println("case 2");
             while (ran != 0) {
                 if (j == 6) {
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     i--;
                     if (i == -1) {
                         i=0;
                         j = 7;
                     }
                 } else if (j == 7) {
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     j = 8;
                 } else if (j == 8) {
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     i++;
                 }
                 ran--;
@@ -209,10 +211,10 @@ public class Position {
         else if (j == 7 && i == 0) {
             System.out.println("case 3");
             j++;
-            flag &= checkCell(i, j, stoneList);
+            flag &= checkCoupleCell(i, j, stoneList);
             ran --;
             while (ran !=0){
-                flag &= checkCell(i, j, stoneList);
+                flag &= checkCoupleCell(i, j, stoneList);
                 i++;
                 ran--;
             }
@@ -221,14 +223,14 @@ public class Position {
             System.out.println("case 4");
             while (ran != 0) {
                 if (j == 8) {
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     i++;
                     if (i == 6) {
                         j = 9;
                     }
                 }
                 else if (i == 6) {
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     j++;
                 }
                 ran--;
@@ -238,7 +240,7 @@ public class Position {
             System.out.println("case 5");
             while (ran != 0) {
                 if(i == 6){
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     j++;
                     if (j == 15){
                         i=7;
@@ -246,11 +248,11 @@ public class Position {
                     }
                 }
                 else if(i==7){
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     i++;
                 }
                 else if(i == 8){
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     j--;
                 }
                 ran --;
@@ -260,10 +262,10 @@ public class Position {
         else if (i == 7 && j == 14){
             System.out.println("case 6");
             i++;
-            flag &= checkCell(i, j, stoneList);
+            flag &= checkCoupleCell(i, j, stoneList);
             ran --;
             while (ran != 0){
-                flag &= checkCell(i, j, stoneList);
+                flag &= checkCoupleCell(i, j, stoneList);
                 j--;
                 ran--;
             }
@@ -272,13 +274,13 @@ public class Position {
             System.out.println("case 7");
             while (ran != 0) {
                 if (j != 8){
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     j--;
                     if(j == 8){
                         i=9;
                     }
                 } else {
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     i++;
                 }
                 ran--;
@@ -288,7 +290,7 @@ public class Position {
             System.out.println("case 8");
             while (ran != 0) {
                 if (j == 8){
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     i++;
                     if (i == 15){
                         i=14;
@@ -296,10 +298,10 @@ public class Position {
                     }
                 }
                 else if (j == 7){
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     j = 6;
                 }else{
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     i--;
                 }
                 ran--;
@@ -308,10 +310,10 @@ public class Position {
         else if (i == 14 && j == 7){
             System.out.println("case 9");
             j--;
-            flag &= checkCell(i, j, stoneList);
+            flag &= checkCoupleCell(i, j, stoneList);
             ran --;
             while (ran != 0) {
-                flag &= checkCell(i, j, stoneList);
+                flag &= checkCoupleCell(i, j, stoneList);
                 i--;
                 ran--;
             }
@@ -320,14 +322,14 @@ public class Position {
             System.out.println("case 10");
             while (ran != 0) {
                 if(j == 6){
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     i--;
                     if(i == 8){
                         j = 5;
                     }
                 }
                 else{
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     j--;
                 }
                 ran--;
@@ -337,7 +339,7 @@ public class Position {
             System.out.println("case 11");
             while (ran != 0) {
                 if(i == 8){
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     j--;
                     if(j == -1){
                         i = 7;
@@ -345,10 +347,10 @@ public class Position {
                     }
                 }
                 else if(i == 7){
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     i--;
                 }else {
-                    flag &= checkCell(i, j, stoneList);
+                    flag &= checkCoupleCell(i, j, stoneList);
                     j++;
                 }
                 ran--;
@@ -357,10 +359,10 @@ public class Position {
         else if (i == 7 && j == 0){
             System.out.println("case 12");
             i--;
-            flag &= checkCell(i, j, stoneList);
+            flag &= checkCoupleCell(i, j, stoneList);
             ran --;
             while (ran != 0){
-                flag &= checkCell(i, j, stoneList);
+                flag &= checkCoupleCell(i, j, stoneList);
                 j++;
                 ran--;
             }
