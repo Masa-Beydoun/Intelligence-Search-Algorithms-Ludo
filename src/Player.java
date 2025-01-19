@@ -67,12 +67,10 @@ public class Player {
     public MoveType move(int stoneId, int ran, boolean flag) {
         MoveType type = getStoneById(stoneId).fullMove(ran, this.playerID, flag);
         if (type == MoveType.CANT_MOVE) {
-//            System.out.println("stone can't move");
             return MoveType.CANT_MOVE;
         }
         if (stones.get(stoneId).checkInKitchen(this.playerID, stones.get(stoneId).position)) {
             stones.remove(getStoneById(stoneId));
-//            System.out.println("stone entered the kitchen");
             return MoveType.ENTERED_THE_KITCHEN;
         }
         System.out.println("the stone has moved to new place " + getStoneById(stoneId));
@@ -97,6 +95,32 @@ public class Player {
             }
         }
         return null;
+    }
+
+    public Player deepCopy() {
+        Player copiedPlayer = new Player(this.playerID);
+        copiedPlayer.stones = new ArrayList<>();
+        for (Stone stone : this.stones) {
+            copiedPlayer.stones.add(stone.deepCopy());
+        }
+        return copiedPlayer;
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        Player player = (Player) object;
+        return playerID == player.playerID && stones.equals(player.stones);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = playerID;
+        result = 31 * result + stones.hashCode();
+        return result;
     }
 
     @Override
