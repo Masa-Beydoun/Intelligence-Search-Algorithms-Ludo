@@ -4,77 +4,97 @@ import java.util.List;
 public class Heuristic {
 
 
-    public static int inDangerStones(State state){
-        int sum=0;
+    public static int calculateHeuristic(State state) {
+        State parent = state;
+        while(parent.turn == state.turn) {
+            parent=parent.parent;
+        }
+        return isNewStone(state) * 5 +
+                isPlayerSafe(state) * 3 +
+                iskilling(state,parent) * 6 +
+                distributeTheStones(state) * 4 +
+                enteredTheKitchen(state) * 2 +
+                wallStones(state) * 4 +
+                inDangerStones(state) * -5;
+    }
+
+    private static int isNewStone(State state) {
+        int count = 0;
+        for(Stone stone : state.players.get(state.turn).stones){
+            if(stone.alive){
+                count++;
+            }
+
+        }
+
+        return count;
+    }
+
+
+    public static int distributeTheStones(State state) {
+        boolean f1 = false, f2 = false, f3 = false, f4 = false;
+        for (Stone s : state.players.get(state.turn).stones) {
+            if (s.position.i >= 9) {
+                f1 = true;
+            } else if (s.position.i <= 5) {
+                f2 = true;
+            } else if (s.position.j >= 9) {
+                f3 = true;
+            } else if (s.position.j <= 5) {
+                f4 = true;
+            }
+        }
+        int count = 0;
+        if (f1) count++;
+        if (f2) count++;
+        if (f3) count++;
+        if (f4) count++;
+        return count;
+    }
+
+    public static int inDangerStones(State state) {
+        int sum = 0;
         List<Stone> stones = state.players.get(state.turn).stones;
-        for(Stone stone : stones){
-            boolean flag =  stone.position.getPrevious6Cells(stone.position.i,stone.position.j,state.getOtherStones());
-            if(flag) sum++;
+        for (Stone stone : stones) {
+            boolean flag = stone.position.getPrevious6Cells(stone.position.i, stone.position.j, state.getOtherStones());
+            if (flag) sum++;
         }
         return sum;
     }
 
-    public static int wallStones(State state){
+    public static int wallStones(State state) {
         List<Position> positions = new ArrayList<>();
-        for(Stone stone : state.players.get(state.turn).stones){
+        for (Stone stone : state.players.get(state.turn).stones) {
             positions.add(stone.position);
         }
-        List<Position> visitedPositions = new ArrayList<>();
         int count = 0;
         List<Integer> vis = new ArrayList<>();
-        for(int i=0; i<positions.size(); i++){
-            if(vis.contains(i)) continue;
-            for(int j=i+1; j<positions.size(); j++){
-                if(positions.get(i).equals(positions.get(j))){
+        for (int i = 0; i < positions.size(); i++) {
+            if (vis.contains(i)) continue;
+            for (int j = i + 1; j < positions.size(); j++) {
+                if (positions.get(i).equals(positions.get(j))) {
                     vis.add(j);
                     count++;
                 }
             }
         }
-        if(count == 0) return 0;
+        if (count == 0) return 0;
         return count + 1;
     }
 
 
-    public static int enteredTheKitchen(State state){
+    public static int enteredTheKitchen(State state) {
         Player player = state.players.get(state.turn);
-        return 0;
+        return 4 - player.stones.size();
     }
 
 
-
-
-    public static int calculateHeuristic(State state) {
-        int heuristicValue = 0;
-
-        return inDangerStones(state)+wallStones(state)+ enteredTheKitchen(state)+ isPlayerSafe(state);
-//
-//        for (int i = 0; i < state.players.size(); i++) {
-//            Player player = state.players.get(i);
-//
-//
-//            // check each stone
-//            for (Stone stone : player.stones) {
-//                if (stone.alive) {
-//
-//
-//                    // Check if stone is in safe zone
-//                    boolean isSafe = isPlayerSafe(player, allStones);
-//                    if (isSafe) {
-//                        heuristicValue += 1;
-//                    } else {
-//                        heuristicValue -= 1;
-//                    }
-//
-//                    // Check if stone is blocking an opponent
-//                    if (isBlockingOpponent(player, allStones)) {
-//                        heuristicValue +=1;
-//                    }
-//                }
-//            }
-//        }
-//
-//        return heuristicValue;
+    private static int iskilling(State state,State parentState) {
+        int killCount = 0;
+        if (state.getOtherStones().size() < parentState.getOtherStones().size()) {
+            killCount += (parentState.getOtherStones().size() - state.getOtherStones().size());
+        }
+        return killCount;
     }
 
 
@@ -88,23 +108,5 @@ public class Heuristic {
         return count;
     }
 
-
-//    private static boolean isBlockingOpponent(Player player, List<Stone> allStones) {
-//        for (Stone stone : player.stones) {
-//            if (stone.alive) {
-//                List<Stone> previousCells = new ArrayList<>();
-//                stone.position.getNext6Cells(stone.position.i, stone.position.j, previousCells);
-//
-//                for (Stone prevCell : previousCells) {
-//                    if (prevCell.locked) {
-//                        return true;
-//
-//                    }
-//                }
-//            }
-//        }
-//
-//        return false; // All stones are safe
-//    }
 
 }

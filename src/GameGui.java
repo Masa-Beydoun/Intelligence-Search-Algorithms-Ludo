@@ -161,7 +161,7 @@ public class GameGui extends JFrame {
         this.state.played = true;
 
         System.out.println(Heuristic.inDangerStones(state));
-        turnLabel.setText("NEXT Turn: " + (state.turn));
+        turnLabel.setText("NEXT Turn: " + (state.turn) + " possibility "+state.possibility);
 
 //        System.out.println("next states \n " +state.nextStates());
         refreshStones();
