@@ -6,7 +6,7 @@ import java.util.List;
 
 public class GameGui extends JFrame {
 
-    List<State> visited = new ArrayList<State>();
+    List<State> visited = new ArrayList<>();
     Icon[] nerdImages = {
             new ImageIcon("1.png"),
             new ImageIcon("2.png"),
@@ -25,6 +25,7 @@ public class GameGui extends JFrame {
     JButton[][] buttons;
     JPanel game, southPanel;
     JButton nerdButton = new JButton();
+    JButton nextButton = new JButton("Next"); // "Next" button
     JLabel turnLabel;
     int ran = 0;
 
@@ -37,28 +38,64 @@ public class GameGui extends JFrame {
         turnLabel = new JLabel("NEXT Turn: " + (state.turn));
         southPanel.add(nerdButton);
         southPanel.add(turnLabel);
+        southPanel.add(nextButton);
         nerdButton.addActionListener(e -> nerdActionListener());
+        nextButton.addActionListener(e -> nextActionListener());
         this.add(southPanel, BorderLayout.SOUTH);
         this.add(game, BorderLayout.CENTER);
         this.setBounds(0, 0, 15 * 52, 15 * 50 + 50);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
     public void nerdActionListener() {
-        if (!state.played) return;
-        ran = state.getNerdNumber();
-        nerdButton.setIcon(nerdImages[ran - 1]);
-        if (state.played) {
-            turnLabel.setText("NEXT Turn: " + (state.turn));
+//        if (!state.played) return;
+//        ran = state.getNerdNumber();
+//        nerdButton.setIcon(nerdImages[ran - 1]);
+//        if (state.played) {
+//            turnLabel.setText("NEXT Turn: " + (state.turn));
+//        }
+    }
+
+    public void nextActionListener() {
+        this.dispose();
+
+
+        List<State> nextStatesWillBeEdited = state.nextStates();
+
+        List<State> updatedStates = new ArrayList<>();
+//        System.out.println("next states  : " + nextStatesWillBeEdited.size());
+//        System.out.println("visited  : " + visited.size());
+//        System.out.println();
+        for(State s : nextStatesWillBeEdited) {
+            boolean flag = false;
+            updatedStates.add(s);
+            for(State v : visited){
+                if(s.equals(v)) {
+                    flag = true;
+                    updatedStates.remove(s);
+                }
+            }
+            if(!flag) {
+                visited.add(s);
+            }
+//            System.out.println();
+//            System.out.println("next states  : " + updatedStates.size());
+//            System.out.println("visited  : " + visited.size());
+//            System.out.println();
+        }
+
+        System.out.println("without rep : "+updatedStates.size());
+        for (State nextState : updatedStates) {
+            new GameGui(nextState);
         }
     }
 
     public void refreshStones() {
-        System.out.println("refresh stones");
-        System.out.println(state);
-        System.out.println();
-        System.out.println();
+//        System.out.println("refresh stones");
+//        System.out.println(state);
+//        System.out.println();
+//        System.out.println();
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 buttons[i][j].setText("");
@@ -68,10 +105,9 @@ public class GameGui extends JFrame {
 
         for (Player player : state.players) {
             for (Stone s : player.stones) {
-               buttons[s.position.i][s.position.j].setIcon(stonesImages[player.playerID]);
+                buttons[s.position.i][s.position.j].setIcon(stonesImages[player.playerID]);
             }
         }
-
     }
 
     public void createGrid() {
@@ -138,33 +174,23 @@ public class GameGui extends JFrame {
 
     public void moveListener(int i, int j) {
         System.out.println(state);
-        if (state.played) {
-            System.out.println("already did the move");
-            System.out.println();
-            return;
-        }
+
         System.out.println("cell in " + i + " " + j + " have been clicked");
 
-        Stone s = state.players.get(state.turn).getStoneInPlace(i, j);
-        if (s == null) return;
+        List<Stone> s = state.players.get(state.turn).getStoneInPlace(i, j);
+        if (s.isEmpty()) return;
         System.out.println("stone in place " + s);
-        State state1 = state.move(s.id, ran);
+        State state1 = state.move(s.get(0).id, ran);
         if (state1 == null) return;
-        System.out.println("state 1 is played : " + state1.played);
-        if (!state1.played) return;
 
-        this.state = new State(ran);
+        this.state = new State(null);
         state.players = List.copyOf(state1.players);
         state.turn = state1.turn;
 
-
-        this.state.played = true;
-
-        System.out.println("the move have been processed in GameGui class");
+        System.out.println("the move has been processed in GameGui class");
 
         turnLabel.setText("NEXT Turn: " + (state.turn));
 
         refreshStones();
     }
 }
-

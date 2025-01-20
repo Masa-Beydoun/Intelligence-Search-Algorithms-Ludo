@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Position {
     int i, j;
 
@@ -5,6 +7,103 @@ public class Position {
         this.i = i;
         this.j = j;
     }
+
+    private void checkCell(int i, int j,List<Stone> stoneList) {
+        int count = 0;
+        for(Stone stone : stoneList) {
+            if(stone.position.i == i && stone.position.j == j) {
+                count++;
+            }
+        }
+        if(count>1){
+
+        }
+    }
+
+    public void getPrevious6Cells(int i, int j, List<Stone> stoneList){
+        if (i == 7 && j == 0) {
+            i=8;
+            while(j <= 5){
+                checkCell(i,j,stoneList);
+                j++;
+            }
+        } else if (i == 7 && j == 14) {
+            i=6;
+            while(j >=8){
+                checkCell(i,j,stoneList);
+                j--;
+            }
+        } else if (j == 7 && i == 14){
+            j=8;
+            while(i>=9){
+                checkCell(i,j,stoneList);
+                i--;
+            }
+        } else if (j == 7 && i == 0){
+            j=8;
+            while(i<=5){
+                checkCell(i,j,stoneList);
+                i++;
+            }
+        }
+        //////////////////////////
+        if(j == 6 && i >=9) {
+            i++;
+            while(i<=14){
+                checkCell(i,j,stoneList);
+                i++;
+            }
+            checkCell(14,6,stoneList);
+            checkCell(14,7,stoneList);
+            checkCell(14,8,stoneList);
+            i=14;
+            j=8;
+            while (i>=9){
+                checkCell(i,j,stoneList);
+                i--;
+            }
+        }else if(i==8 && j <= 5){
+            while(j<=5){
+                checkCell(i,j,stoneList);
+                j++;
+            }
+            i=9;
+            j=6;
+            while(i<=14){
+                checkCell(i,j,stoneList);
+                i++;
+            }
+        }else if(i == 6 && j <= 5){
+            j--;
+            while(j>=0){
+                checkCell(i,j,stoneList);
+                i--;
+            }
+            checkCell(6,0,stoneList);
+            checkCell(6,1,stoneList);
+            checkCell(6,2,stoneList);
+            i=8;
+            j=0;
+            while(j<=5){
+                checkCell(i,j,stoneList);
+                j++;
+            }
+        } else if(j==6 && i <=5){
+            while(i<=5){
+                checkCell(i,j,stoneList);
+                i++;
+            }
+            i=6;
+            j=5;
+            while(j>=0){
+                checkCell(i,j,stoneList);
+                j--;
+            }
+        }
+    }
+
+
+
 
     public void newPosition(int ran) {
 

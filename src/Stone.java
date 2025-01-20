@@ -1,3 +1,5 @@
+import java.util.Map;
+
 public class Stone {
     int id;
     Position position;
@@ -69,17 +71,15 @@ public class Stone {
         locked = false;
     }
 
+    private static final Map<Integer, Position> KITCHEN_POSITIONS = Map.of(
+            0, new Position(7, 6),
+            1, new Position(6, 7),
+            2, new Position(7, 8),
+            3, new Position(8, 7)
+    );
+
     public boolean checkInKitchen(int turn, Position pos) {
-        if (turn == 0 && (pos.i == 7 && pos.j == 6)) {
-            return true;
-        } else if (turn == 1 && (pos.i == 6 && pos.j == 7)) {
-            return true;
-        } else if (turn == 2 && (pos.i == 7 && pos.j == 8)) {
-            return true;
-        } else if (turn == 3 && (pos.i == 8 && pos.j == 7)) {
-            return true;
-        }
-        return false;
+        return pos.equals(KITCHEN_POSITIONS.get(turn));
     }
 
     public MoveType fullMove(int ran, int turn, boolean flag) {
@@ -101,7 +101,7 @@ public class Stone {
 
     public Position move(int ran, int turn, boolean flag) {
         if (!alive && ran == 6) {
-            System.out.println("not alive random 6");
+//            System.out.println("not alive random 6");
             Position pos = makeAlive(turn);
             if (flag) {
                 alive = true;
@@ -110,10 +110,10 @@ public class Stone {
             return pos;
         }
         if (!alive && ran != 6) {
-            System.out.println("not alive random not 6");
+//            System.out.println("not alive random not 6");
             return new Position(-1, -1);
         }
-        System.out.println("checking new position");
+//        System.out.println("checking new position");
         Position newPos = new Position(position.i, position.j);
         newPos.checkRestTillKitchen(ran, turn);
         if (newPos.equals(new Position(-1, -1))) return newPos;
@@ -130,6 +130,33 @@ public class Stone {
 
         return newPos;
     }
+    public Stone deepCopy() {
+        return new Stone(
+                this.id,
+                new Position(this.position.i, this.position.j),
+                this.alive,
+                this.locked
+        );
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        Stone stone = (Stone) object;
+        return alive == stone.alive && locked == stone.locked && position.equals(stone.position);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + position.hashCode();
+        result = 31 * result + Boolean.hashCode(alive);
+        result = 31 * result + Boolean.hashCode(locked);
+        return result;
+    }
 
     @Override
     public String toString() {
@@ -139,6 +166,6 @@ public class Stone {
                 "," + position.j +
                 ", Alive=" + alive +
                 ", locked=" + locked +
-                '}';
+                "}\n";
     }
 }
