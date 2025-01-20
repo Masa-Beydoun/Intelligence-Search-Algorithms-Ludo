@@ -131,6 +131,16 @@ public class Stone {
         return newPos;
     }
 
+
+    public Stone deepCopy() {
+        return new Stone(
+                this.id,
+                new Position(this.position.i, this.position.j),
+                this.alive,
+                this.locked
+        );
+    }
+
     @Override
     public String toString() {
         return "{" +
