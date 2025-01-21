@@ -24,16 +24,15 @@ public class Heuristic {
             if(stone.alive){
                 count++;
             }
-
         }
 
         return count;
     }
 
-
     public static int distributeTheStones(State state) {
         boolean f1 = false, f2 = false, f3 = false, f4 = false;
         for (Stone s : state.players.get(state.turn).stones) {
+            if (!s.alive) continue;
             if (s.position.i >= 9) {
                 f1 = true;
             } else if (s.position.i <= 5) {
@@ -56,6 +55,7 @@ public class Heuristic {
         int sum = 0;
         List<Stone> stones = state.players.get(state.turn).stones;
         for (Stone stone : stones) {
+            if (!stone.alive)continue;
             boolean flag = stone.position.getPrevious6Cells(stone.position.i, stone.position.j, state.getOtherStones());
             if (flag) sum++;
         }
@@ -65,6 +65,7 @@ public class Heuristic {
     public static int wallStones(State state) {
         List<Position> positions = new ArrayList<>();
         for (Stone stone : state.players.get(state.turn).stones) {
+            if(!stone.alive) continue;
             positions.add(stone.position);
         }
         int count = 0;
@@ -82,12 +83,10 @@ public class Heuristic {
         return count + 1;
     }
 
-
     public static int enteredTheKitchen(State state) {
         Player player = state.players.get(state.turn);
         return 4 - player.stones.size();
     }
-
 
     private static int iskilling(State state,State parentState) {
         int killCount = 0;
@@ -96,7 +95,6 @@ public class Heuristic {
         }
         return killCount;
     }
-
 
     private static int isPlayerSafe(State state) {
         int count = 0;
@@ -107,6 +105,5 @@ public class Heuristic {
         }
         return count;
     }
-
 
 }

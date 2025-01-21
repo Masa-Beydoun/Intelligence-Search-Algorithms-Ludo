@@ -76,7 +76,34 @@ public class State {
         return newState;
     }
 
-    public List<State> nextStates() {
+    public List<State> simpleNextState() {
+        List<State> nextStatesList = new ArrayList<>();
+        Queue<State> toDoMoveAgain = new ArrayDeque<>();
+
+        for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
+            boolean flag = this.thereIsMove(nerdNumber, getOtherStones());
+            if (!flag) {
+                State newState = this.deepCopy();
+                newState.turn = (turn + 1) % 4;
+                nextStatesList.add(newState);
+                continue;
+            }
+            for (Stone s : players.get(turn).stones) {
+                State newState = this.deepCopy();
+                MoveType canMove2 = newState.players.get(turn).move(s.id, nerdNumber, true, getOtherStones());
+                if (canMove2 == MoveType.CANT_MOVE) continue;
+                boolean killed = killStone(true);
+                newState.possibility = 1 / 24.0;
+                if (!(nerdNumber == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed))
+                    newState.turn = (turn + 1) % 4;
+
+                nextStatesList.add(newState);
+            }
+        }
+        return nextStatesList;
+    }
+
+    public List<State> advancedNextStates() {
         List<State> nextStatesList = new ArrayList<>();
         Queue<State> toDoMoveAgain = new ArrayDeque<>();
 

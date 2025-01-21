@@ -28,7 +28,7 @@ public class GameGui extends JFrame {
     JLabel turnLabel;
     int ran = 0;
 
-    GameGui(State state) {
+    GameGui(State state,String mode) {
         this.state = state;
         createGrid();
         refreshStones();
