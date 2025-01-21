@@ -142,30 +142,8 @@ public class State {
     public List<State> advancedNextStates() {
         List<State> nextStatesList = new ArrayList<>();
         Queue<State> toDoMoveAgain = new ArrayDeque<>();
+        toDoMoveAgain.add(this);
 
-        for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
-            boolean flag = this.thereIsMove(nerdNumber,getOtherStones());
-            if (!flag) {
-                State newState = this.deepCopy();
-                newState.turn = (turn + 1) % 4;
-                nextStatesList.add(newState);
-                continue;
-            }
-            for (Stone s : players.get(turn).stones) {
-                State newState = this.deepCopy();
-                MoveType canMove2 = newState.players.get(turn).move(s.id, nerdNumber, true, getOtherStones());
-                if (canMove2 == MoveType.CANT_MOVE) continue;
-                boolean killed = killStone();
-                if (nerdNumber == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed) {
-                    toDoMoveAgain.add(newState);
-                } else {
-                    newState.turn = (turn + 1) % 4;
-                    nextStatesList.add(newState);
-                }
-            }
-        }
-
-        System.out.println("--------------------------------------");
         while(!toDoMoveAgain.isEmpty()) {
             State queueMoveAgain = toDoMoveAgain.poll();
             for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
@@ -181,6 +159,7 @@ public class State {
                 for (Stone s : players.get(turn).stones) {
 
                     State newState2 = queueMoveAgain.deepCopy();
+
                     if(newState2.checkParentState()){
                         nextStatesList.add(newState2.parent.parent.parent);
                         continue;
@@ -188,14 +167,11 @@ public class State {
 
                     MoveType canMove2 = newState2.players.get(turn).move(s.id, nerdNumber, true,getOtherStones());
                     if (canMove2 == MoveType.CANT_MOVE) continue;
-//                    System.out.println("stone can move");
                     boolean killed = killStone();
                     if (nerdNumber == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed) {
-//                        System.out.println("adding when nerd number is 6\n");
                         toDoMoveAgain.add(newState2);
                     } else {
                         newState2.turn = (turn + 1) % 4;
-//                        System.out.println("adding to list\n");
                         nextStatesList.add(newState2);
                     }
                 }
