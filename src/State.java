@@ -5,7 +5,10 @@ public class State {
 
     int turn = 0;
     boolean played = true;
-    List<Player> players = List.of(new Player(0), new Player(1), new Player(2), new Player(3));
+    List<Player> players = List.of(new Player(0),
+            new Player(1),
+            new Player(2),
+            new Player(3));
     State parent;
     double possibility;
 
@@ -70,20 +73,51 @@ public class State {
             return null;
         }
         newState.played = true;
+        newState.possibility = 1/24.0;
         boolean killed = killStone(true);
         if (ran == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed) {
         } else newState.turn = (turn + 1) % 4;
         return newState;
     }
 
+    public List<State> getListWithoutRep(String mode){
+        List<State> nextStatesWillBeEdited;
+        List<State> visited = new ArrayList<>();
+        if (mode.equals("simple"))
+            nextStatesWillBeEdited = simpleNextState();
+        else
+            nextStatesWillBeEdited = advancedNextStates();
+
+        List<State> updatedStates = new ArrayList<>();
+
+        for (State s : nextStatesWillBeEdited) {
+            boolean isVisited = false;
+
+            for (State v : visited) {
+                if (s.equals(v)) {
+                    v.possibility += s.possibility;
+                    isVisited = true;
+                    break;
+                }
+            }
+            if (!isVisited) {
+                visited.add(s);
+                updatedStates.add(s);
+            }
+        }
+        return updatedStates;
+    }
+
+
     public List<State> simpleNextState() {
         List<State> nextStatesList = new ArrayList<>();
-        Queue<State> toDoMoveAgain = new ArrayDeque<>();
 
         for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
             boolean flag = this.thereIsMove(nerdNumber, getOtherStones());
             if (!flag) {
+
                 State newState = this.deepCopy();
+                newState.possibility = 1/(6.0);
                 newState.turn = (turn + 1) % 4;
                 nextStatesList.add(newState);
                 continue;
@@ -161,7 +195,6 @@ public class State {
     }
 
     public boolean killStone(boolean flag) {
-        supposedToDo();
         Player player1 = players.get(turn);
         for (Player player2 : players) {
             if (player1.playerID == player2.playerID) continue;
@@ -192,19 +225,6 @@ public class State {
         }
         return true;
     }
-
-    public void supposedToDo() {
-        if (turn == 0) {
-            System.out.println("supposed to do is RED");
-        } else if (turn == 1) {
-            System.out.println("supposed to do is GREEN");
-        } else if (turn == 2) {
-            System.out.println("supposed to do is YELLOW");
-        } else if (turn == 3) {
-            System.out.println("supposed to do is BLUE");
-        }
-    }
-
 
     public List<Stone> getOtherStones(){
         List<Stone> stones = new ArrayList<>();
