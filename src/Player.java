@@ -106,6 +106,24 @@ public class Player {
         return copiedPlayer;
     }
 
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        Player player = (Player) object;
+        return playerID == player.playerID && stones.equals(player.stones);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = playerID;
+        result = 31 * result + stones.hashCode();
+        return result;
+    }
+
     @Override
     public String toString() {
         return "Player{" +

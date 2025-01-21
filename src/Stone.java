@@ -130,6 +130,33 @@ public class Stone {
         newPos.canMove(ran, stones);
         return newPos;
     }
+    public Stone deepCopy() {
+        return new Stone(
+                this.id,
+                new Position(this.position.i, this.position.j),
+                this.alive,
+                this.locked
+        );
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        Stone stone = (Stone) object;
+        return alive == stone.alive && locked == stone.locked && position.equals(stone.position);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + position.hashCode();
+        result = 31 * result + Boolean.hashCode(alive);
+        result = 31 * result + Boolean.hashCode(locked);
+        return result;
+    }
 
 
     public Stone deepCopy() {
@@ -149,6 +176,6 @@ public class Stone {
                 "," + position.j +
                 ", Alive=" + alive +
                 ", locked=" + locked +
-                '}';
+                "}\n";
     }
 }

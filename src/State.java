@@ -4,7 +4,6 @@ import java.util.*;
 public class State {
 
     int turn = 0;
-    boolean played = true;
     List<Player> players = List.of(new Player(0), new Player(1), new Player(2), new Player(3));
     State parent;
     double possibility;
@@ -14,10 +13,9 @@ public class State {
         this.parent = parent;
     }
 
-    public State(List<Player> players, int turn, boolean played, State parent) {
+    public State(List<Player> players, int turn, State parent) {
         this.players = players;
         this.turn = turn;
-        this.played = played;
         this.parent = parent;
     }
 
@@ -45,7 +43,6 @@ public class State {
     }
 
     public int getNerdNumber() {
-        played = false;
         Random r = new Random();
         int ran;
         while ((ran = r.nextInt(7)) == 0) {
@@ -55,11 +52,8 @@ public class State {
         System.out.println("there is move  : " + thereIsMove(ran,stones));
         if (!thereIsMove(ran,stones)) {
             turn = (turn + 1) % 4;
-            played = true;
             return ran;
         }
-        System.out.println("move exist played : " + played);
-        System.out.println();
         return ran;
     }
 
@@ -71,6 +65,7 @@ public class State {
         }
         newState.played = true;
         boolean killed = killStone(true);
+
         if (ran == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed) {
         } else newState.turn = (turn + 1) % 4;
         return newState;
@@ -82,6 +77,7 @@ public class State {
 
         for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
             boolean flag = this.thereIsMove(nerdNumber, getOtherStones());
+
             if (!flag) {
                 State newState = this.deepCopy();
                 newState.turn = (turn + 1) % 4;
@@ -122,6 +118,7 @@ public class State {
                 if (canMove2 == MoveType.CANT_MOVE) continue;
                 boolean killed = killStone(true);
                 newState.possibility=1/24.0;
+              
                 if (nerdNumber == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed) {
                     toDoMoveAgain.add(newState);
                 } else {
@@ -134,34 +131,38 @@ public class State {
         System.out.println("--------------------------------------");
         while(!toDoMoveAgain.isEmpty()) {
             State queueMoveAgain = toDoMoveAgain.poll();
+//            System.out.println(queueMoveAgain.players.get(0));
             for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
+//                System.out.println("nerd number : " + nerdNumber);
+//                System.out.println("queue size : " + toDoMoveAgain.size() + "  next state list size : " + nextStatesList.size());
                 for (Stone s : players.get(turn).stones) {
+//                    System.out.println("stone : "+ s.id);
                     State newState2 = queueMoveAgain.deepCopy();
                     boolean flag = newState2.checkParentState();
-                    newState2.possibility=newState2.parent.possibility * 1/24.0;
                     if(flag){
-                        State state = newState2.parent.parent.parent;
-                        state.turn = (turn + 1) % 4;
-                        nextStatesList.add(state);
+                        nextStatesList.add(newState2.parent.parent.parent);
                         continue;
                     }
-                    MoveType canMove2 = newState2.players.get(turn).move(s.id, nerdNumber, true,getOtherStones());
+                    MoveType canMove2 = newState2.players.get(turn).move(s.id, nerdNumber, true);
                     if (canMove2 == MoveType.CANT_MOVE) continue;
-                    boolean killed = killStone(true);
+//                    System.out.println("stone can move");
+                    boolean killed = killStone();
                     if (nerdNumber == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed) {
+//                        System.out.println("adding when nerd number is 6\n");
                         toDoMoveAgain.add(newState2);
                     } else {
                         newState2.turn = (turn + 1) % 4;
+//                        System.out.println("adding to list\n");
                         nextStatesList.add(newState2);
                     }
                 }
             }
         }
+
         return nextStatesList;
     }
 
     public boolean killStone(boolean flag) {
-        supposedToDo();
         Player player1 = players.get(turn);
         for (Player player2 : players) {
             if (player1.playerID == player2.playerID) continue;
@@ -193,16 +194,13 @@ public class State {
         return true;
     }
 
-    public void supposedToDo() {
-        if (turn == 0) {
-            System.out.println("supposed to do is RED");
-        } else if (turn == 1) {
-            System.out.println("supposed to do is GREEN");
-        } else if (turn == 2) {
-            System.out.println("supposed to do is YELLOW");
-        } else if (turn == 3) {
-            System.out.println("supposed to do is BLUE");
+
+    public State deepCopy() {
+        List<Player> copiedPlayers = new ArrayList<>();
+        for (Player player : players) {
+            copiedPlayers.add(player.deepCopy());
         }
+        return new State(copiedPlayers, turn, this);
     }
 
 
@@ -231,21 +229,19 @@ public class State {
         if (object == null || getClass() != object.getClass()) return false;
 
         State state = (State) object;
-        return turn == state.turn && played == state.played && players.equals(state.players);
+        return turn == state.turn && players.equals(state.players);
     }
 
     @Override
     public int hashCode() {
-        int result = players.hashCode();
-        result = 31 * result + turn;
-        result = 31 * result + Boolean.hashCode(played);
+        int result = turn;
+        result = 31 * result + players.hashCode();
         return result;
     }
 
-
     @Override
     public String toString() {
-        return "State{" + "players=" + players + ", turn=" + turn + ", played=" + played + '}';
+        return "State{" + "players=" + players + ", turn=" + turn + "}\n";
     }
 
 
