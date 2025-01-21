@@ -27,15 +27,14 @@ public class State {
     public boolean checkParentState() {
         if (parent != null && turn == parent.turn &&
                 parent.parent != null && turn == parent.parent.turn &&
-                parent.parent.parent != null && turn == parent.parent.parent.turn &&
-                parent.parent.parent.parent != null && turn == parent.parent.parent.parent.turn) {
+                parent.parent.parent != null && turn == parent.parent.parent.turn) {
             return true;
         }
         return false;
     }
 
-    public boolean thereIsMove(int ran,List<Stone> stones) {
-        return players.get(turn).thereIsMove(ran,stones);
+    public boolean thereIsMove(int ran, List<Stone> stones) {
+        return players.get(turn).thereIsMove(ran, stones);
     }
 
     public int getStoneInPlace(int i, int j) {
@@ -55,8 +54,8 @@ public class State {
         }
         System.out.println("nerd  : " + ran);
         List<Stone> stones = getOtherStones();
-        System.out.println("there is move  : " + thereIsMove(ran,stones));
-        if (!thereIsMove(ran,stones)) {
+        System.out.println("there is move  : " + thereIsMove(ran, stones));
+        if (!thereIsMove(ran, stones)) {
             turn = (turn + 1) % 4;
             played = true;
             return ran;
@@ -68,19 +67,19 @@ public class State {
 
     public State move(int stoneId, int ran) {
         State newState = this.deepCopy();
-        MoveType canMove2 = newState.players.get(turn).move(stoneId, ran, true,getOtherStones());
+        MoveType canMove2 = newState.players.get(turn).move(stoneId, ran, true, getOtherStones());
         if (canMove2 == MoveType.CANT_MOVE) {
             return null;
         }
         newState.played = true;
-        newState.possibility = 1/24.0;
+        newState.possibility = 1 / 24.0;
         boolean killed = killStone();
         if (ran == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed) {
         } else newState.turn = (turn + 1) % 4;
         return newState;
     }
 
-    public List<State> getListWithoutRep(String mode){
+    public List<State> getListWithoutRep(String mode) {
         List<State> nextStatesWillBeEdited;
         List<State> visited = new ArrayList<>();
         if (mode.equals("simple"))
@@ -92,20 +91,20 @@ public class State {
 
         for (State s : nextStatesWillBeEdited) {
             boolean isVisited = false;
-
             for (State v : visited) {
+                if (s == null) continue;
                 if (s.equals(v)) {
                     v.possibility += s.possibility;
                     isVisited = true;
                     break;
                 }
             }
-            if (!isVisited) {
+            if (!isVisited && s != null) {
                 visited.add(s);
                 updatedStates.add(s);
             }
         }
-        System.out.println("next state sizes : "+ updatedStates.size());
+        System.out.println("next state sizes : " + updatedStates.size());
         return updatedStates;
     }
 
@@ -119,7 +118,7 @@ public class State {
             if (!flag) {
 
                 State newState = this.deepCopy();
-                newState.possibility = 1/(6.0);
+                newState.possibility = 1 / (6.0);
                 newState.turn = (turn + 1) % 4;
                 nextStatesList.add(newState);
                 continue;
@@ -144,34 +143,39 @@ public class State {
         Queue<State> toDoMoveAgain = new ArrayDeque<>();
         toDoMoveAgain.add(this);
 
-        while(!toDoMoveAgain.isEmpty()) {
+        while (!toDoMoveAgain.isEmpty()) {
             State queueMoveAgain = toDoMoveAgain.poll();
+            if (queueMoveAgain == null) continue;
             for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
-                boolean flag = queueMoveAgain.thereIsMove(nerdNumber, getOtherStones());
-                if (!flag) {
+                if (!queueMoveAgain.thereIsMove(nerdNumber, getOtherStones())) {
                     State newState = queueMoveAgain.deepCopy();
-                    newState.possibility = 1/(6.0);
+                    newState.possibility = 1 / (6.0);
                     newState.turn = (turn + 1) % 4;
                     nextStatesList.add(newState);
                     continue;
                 }
-
+                if (queueMoveAgain.checkParentState()) {
+                    State addingState = queueMoveAgain.parent.parent.parent.deepCopy();
+                    addingState.possibility = (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0);
+                    nextStatesList.add(queueMoveAgain.parent.parent.parent);
+                    continue;
+                }
                 for (Stone s : players.get(turn).stones) {
-
                     State newState2 = queueMoveAgain.deepCopy();
-
-                    if(newState2.checkParentState()){
-                        nextStatesList.add(newState2.parent.parent.parent);
+                    MoveType canMove2 = newState2.players.get(turn).move(s.id, nerdNumber, true, getOtherStones());
+                    if (canMove2 == MoveType.CANT_MOVE) {
                         continue;
                     }
-
-                    MoveType canMove2 = newState2.players.get(turn).move(s.id, nerdNumber, true,getOtherStones());
-                    if (canMove2 == MoveType.CANT_MOVE) continue;
+                    if (newState2.parent != null && newState2.parent.possibility != 0.0)
+                        newState2.possibility = newState2.parent.possibility * 1 / 24.0;
+                    else
+                        newState2.possibility = 1 / 24.0;
                     boolean killed = killStone();
                     if (nerdNumber == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed) {
                         toDoMoveAgain.add(newState2);
                     } else {
                         newState2.turn = (turn + 1) % 4;
+                        if (newState2 == null) continue;
                         nextStatesList.add(newState2);
                     }
                 }
@@ -200,7 +204,6 @@ public class State {
     }
 
 
-
     public boolean checkGoal() {
         for (Player p : players) {
             if (!p.stones.isEmpty()) {
@@ -210,11 +213,11 @@ public class State {
         return true;
     }
 
-    public List<Stone> getOtherStones(){
+    public List<Stone> getOtherStones() {
         List<Stone> stones = new ArrayList<>();
-        for(Player p : players) {
-            if(p.playerID == turn) continue;
-            for(Stone stone : p.stones){
+        for (Player p : players) {
+            if (p.playerID == turn) continue;
+            for (Stone stone : p.stones) {
                 stones.add(stone);
             }
         }
@@ -226,7 +229,7 @@ public class State {
         for (Player player : players) {
             copiedPlayers.add(player.deepCopy());
         }
-        return new State(copiedPlayers, turn,false, this);
+        return new State(copiedPlayers, turn, false, this);
     }
 
     @Override
