@@ -6,7 +6,7 @@ import java.util.List;
 
 public class GameGui extends JFrame {
 
-    List<State> visited = new ArrayList<State>();
+    List<State> visited = new ArrayList<>();
     Icon[] nerdImages = {
             new ImageIcon("1.png"),
             new ImageIcon("2.png"),
@@ -67,10 +67,7 @@ public class GameGui extends JFrame {
     }
 
     public void refreshStones() {
-        System.out.println("refresh stones");
-        System.out.println(state);
-        System.out.println();
-        System.out.println();
+
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 buttons[i][j].setText("");
@@ -171,9 +168,8 @@ public class GameGui extends JFrame {
 
 
         this.state.played = true;
-
-        System.out.println(Heuristic.inDangerStones(state));
-        turnLabel.setText("NEXT Turn: " + (state.turn) + " possibility " + state.possibility);
+        turnLabel.setText("NEXT Turn: " + (state.turn) + " possibility "+state.possibility);
+        System.out.println("the move has been processed in GameGui class");
 
 //        System.out.println("next states \n " +state.nextStates());
         refreshStones();
