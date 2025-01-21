@@ -49,14 +49,14 @@ public class Player {
         }
     }
 
-    public boolean thereIsMove(int ran) {
+    public boolean thereIsMove(int ran,List<Stone> stones) {
         List<Stone> newStones = new ArrayList<>();
-        for (Stone s : stones) {
+        for (Stone s : this.stones) {
             newStones.add(new Stone(s.id, s.position, s.alive, s.locked));
         }
 
         for (Stone s : newStones) {
-            MoveType moveType = s.fullMove(ran, playerID, false);
+            MoveType moveType = s.fullMove(ran, playerID, false,stones);
             if (moveType == MoveType.MOVED || moveType == MoveType.ENTERED_THE_KITCHEN) {
                 return true;
             }
@@ -64,8 +64,8 @@ public class Player {
         return false;
     }
 
-    public MoveType move(int stoneId, int ran, boolean flag) {
-        MoveType type = getStoneById(stoneId).fullMove(ran, this.playerID, flag);
+    public MoveType move(int stoneId, int ran, boolean flag,List<Stone> stones) {
+        MoveType type = getStoneById(stoneId).fullMove(ran, this.playerID, flag, stones);
         if (type == MoveType.CANT_MOVE) {
             return MoveType.CANT_MOVE;
         }

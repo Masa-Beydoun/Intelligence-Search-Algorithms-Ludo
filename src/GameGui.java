@@ -3,6 +3,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GameGui extends JFrame {
 
@@ -28,17 +29,20 @@ public class GameGui extends JFrame {
     JButton nextButton = new JButton("Next"); // "Next" button
     JLabel turnLabel;
     int ran = 0;
+    String mode;
 
-    GameGui(State state) {
+    GameGui(State state,String mode) {
         this.state = state;
+        this.mode = mode;
+
         createGrid();
         refreshStones();
         southPanel = new JPanel(new FlowLayout());
         nerdButton.setPreferredSize(new Dimension(40, 40));
         turnLabel = new JLabel("NEXT Turn: " + (state.turn));
-        southPanel.add(nerdButton);
+        if(mode.equals("user"))southPanel.add(nerdButton);
         southPanel.add(turnLabel);
-        southPanel.add(nextButton);
+        if(mode.equals("simple") || mode.equals("advanced"))southPanel.add(nextButton);
         nerdButton.addActionListener(e -> nerdActionListener());
         nextButton.addActionListener(e -> nextActionListener());
         this.add(southPanel, BorderLayout.SOUTH);
@@ -49,19 +53,23 @@ public class GameGui extends JFrame {
     }
 
     public void nerdActionListener() {
-//        if (!state.played) return;
-//        ran = state.getNerdNumber();
-//        nerdButton.setIcon(nerdImages[ran - 1]);
-//        if (state.played) {
-//            turnLabel.setText("NEXT Turn: " + (state.turn));
-//        }
+        if (state.played) return;
+        ran = state.getNerdNumber();
+        nerdButton.setIcon(nerdImages[ran - 1]);
+        if (state.played) {
+            turnLabel.setText("NEXT Turn: " + (state.turn));
+        }
     }
 
     public void nextActionListener() {
         this.dispose();
-
-
-        List<State> nextStatesWillBeEdited = state.nextStates();
+        List<State> nextStatesWillBeEdited = new ArrayList<>();
+        if(mode.equals("user")) {
+            nextStatesWillBeEdited = state.simpleNextState();
+        }
+        else if(mode.equals("advanced")) {
+            nextStatesWillBeEdited = state.advancedNextStates();
+        }
 
         List<State> updatedStates = new ArrayList<>();
 //        System.out.println("next states  : " + nextStatesWillBeEdited.size());
@@ -87,7 +95,7 @@ public class GameGui extends JFrame {
 
         System.out.println("without rep : "+updatedStates.size());
         for (State nextState : updatedStates) {
-            new GameGui(nextState);
+            new GameGui(nextState,mode);
         }
     }
 
@@ -188,8 +196,10 @@ public class GameGui extends JFrame {
         state.turn = state1.turn;
 
         System.out.println("the move has been processed in GameGui class");
+        this.state.played = true;
 
-        turnLabel.setText("NEXT Turn: " + (state.turn));
+        System.out.println(Heuristic.inDangerStones(state));
+        turnLabel.setText("NEXT Turn: " + (state.turn) + " possibility "+state.possibility);
 
         refreshStones();
     }
