@@ -42,8 +42,7 @@ public class Algorithm {
     private double expectimax(State state, int depth, int turn, int actualTurn, Set<State> visited) {
 
         if (depth == MAX_DEPTH || state.checkGoal()) {
-            Heuristic heuristic = new Heuristic();
-            return heuristic.calculateHeuristic(state);
+            return Heuristic.calculateHeuristic(state);
         }
 
         if (visited.contains(state)) {

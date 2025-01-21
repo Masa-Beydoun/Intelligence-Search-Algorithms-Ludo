@@ -1,12 +1,12 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class StartFrame extends JFrame{
     private JPanel panel1;
     private JButton userButton;
     private JButton advancedButton;
     private JButton simpleButton;
+    private JButton advancedAlgorithmButton;
+    private JButton simpleAlgorithmButton;
 
     StartFrame(State state){
         userButton.addActionListener(e -> {
@@ -19,6 +19,14 @@ public class StartFrame extends JFrame{
         });
         simpleButton.addActionListener(e -> {
             new GameGui(state, "simple");
+            dispose();
+        });
+        advancedAlgorithmButton.addActionListener(e -> {
+           dispose();
+           new GameGui(state,"advancedAlgorithm");
+        });
+        simpleAlgorithmButton.addActionListener(e -> {
+            new GameGui(state, "simpleAlgorithm");
             dispose();
         });
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

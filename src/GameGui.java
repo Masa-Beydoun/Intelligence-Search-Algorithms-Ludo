@@ -38,7 +38,7 @@ public class GameGui extends JFrame {
         turnLabel = new JLabel("NEXT Turn: " + (state.turn) + " possibility "+(state.possibility));
         if(mode.equals("user"))southPanel.add(nerdButton);
         southPanel.add(turnLabel);
-        if(mode.equals("simple") || mode.equals("advanced"))southPanel.add(nextButton);
+        if(!mode.equals("user"))southPanel.add(nextButton);
         nerdButton.addActionListener(e -> nerdActionListener());
         nextButton.addActionListener(e -> nextActionListener(mode));
         this.add(southPanel, BorderLayout.SOUTH);
@@ -50,11 +50,24 @@ public class GameGui extends JFrame {
 
     private void nextActionListener(String mode) {
         this.dispose();
-        List<State>updatedStates = state.getListWithoutRep(mode);
-        System.out.println("without rep : " + updatedStates.size());
-        for (State nextState : updatedStates) {
-            new GameGui(nextState, mode);
+        if(mode.equals("simple") || mode.equals("advanced")) {
+            List<State>updatedStates = state.getListWithoutRep(mode);
+            System.out.println("without rep : " + updatedStates.size());
+            for (State nextState : updatedStates) {
+                new GameGui(nextState, mode);
+            }
         }
+        else if(mode.equals("simpleAlgorithm")){
+            Algorithm algorithm = new Algorithm(AlgorithmType.SIMPLE);
+            this.state = algorithm.bestState(state);
+            new GameGui(state,mode);
+        }
+        else if(mode.equals("advancedAlgorithm")){
+            Algorithm algorithm = new Algorithm(AlgorithmType.ADVANCED);
+            this.state = algorithm.bestState(state);
+            new GameGui(state,mode);
+        }
+
     }
 
     public void nerdActionListener() {

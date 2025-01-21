@@ -113,14 +113,18 @@ public class State {
         List<State> nextStatesList = new ArrayList<>();
 
         for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
-            boolean flag = this.thereIsMove(nerdNumber, getOtherStones());
 
-            if (!flag) {
-
+            if (!this.thereIsMove(nerdNumber, getOtherStones())) {
                 State newState = this.deepCopy();
                 newState.possibility = 1 / (6.0);
                 newState.turn = (turn + 1) % 4;
                 nextStatesList.add(newState);
+                continue;
+            }
+            if (this.checkParentState()) {
+                State addingState = this.parent.parent.parent.deepCopy();
+                addingState.possibility = (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0);
+                nextStatesList.add(this.parent.parent.parent);
                 continue;
             }
             for (Stone s : players.get(turn).stones) {
