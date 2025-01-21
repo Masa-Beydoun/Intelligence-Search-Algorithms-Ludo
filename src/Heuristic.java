@@ -6,7 +6,7 @@ public class Heuristic {
 
     public static int calculateHeuristic(State state) {
         State parent = state;
-        while(parent.turn == state.turn) {
+        while(parent != null && parent.turn == state.turn) {
             parent=parent.parent;
         }
         return isNewStone(state) * 5 +
@@ -90,7 +90,7 @@ public class Heuristic {
 
     private static int iskilling(State state,State parentState) {
         int killCount = 0;
-        if (state.getOtherStones().size() < parentState.getOtherStones().size()) {
+        if (parentState != null && state.getOtherStones().size() < parentState.getOtherStones().size()) {
             killCount += (parentState.getOtherStones().size() - state.getOtherStones().size());
         }
         return killCount;
