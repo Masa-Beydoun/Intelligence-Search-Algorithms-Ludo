@@ -29,7 +29,7 @@ public class GameGui extends JFrame {
     JLabel turnLabel;
     int ran = 0;
 
-    GameGui(State state) {
+    GameGui(State state,String mode) {
         this.state = state;
         createGrid();
         refreshStones();
@@ -187,9 +187,10 @@ public class GameGui extends JFrame {
         state.players = List.copyOf(state1.players);
         state.turn = state1.turn;
 
-        System.out.println("the move has been processed in GameGui class");
 
-        turnLabel.setText("NEXT Turn: " + (state.turn));
+        this.state.played = true;
+        turnLabel.setText("NEXT Turn: " + (state.turn) + " possibility "+state.possibility);
+        System.out.println("the move has been processed in GameGui class");
 
         refreshStones();
     }

@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Map;
 
 public class Stone {
@@ -82,8 +83,8 @@ public class Stone {
         return pos.equals(KITCHEN_POSITIONS.get(turn));
     }
 
-    public MoveType fullMove(int ran, int turn, boolean flag) {
-        Position pos = move(ran, turn, flag);
+    public MoveType fullMove(int ran, int turn, boolean flag,List<Stone> stones) {
+        Position pos = move(ran, turn, flag,stones);
         if (pos.equals(new Position(-1, -1))) return MoveType.CANT_MOVE;
         if (checkInKitchen(turn, pos)) {
             if (flag) {
@@ -99,7 +100,7 @@ public class Stone {
         return MoveType.MOVED;
     }
 
-    public Position move(int ran, int turn, boolean flag) {
+    public Position move(int ran, int turn, boolean flag, List<Stone> stones) {
         if (!alive && ran == 6) {
 //            System.out.println("not alive random 6");
             Position pos = makeAlive(turn);
@@ -126,8 +127,7 @@ public class Stone {
         newPos.i = position.i;
         newPos.j = position.j;
 
-        newPos.newPosition(ran);
-
+        newPos.canMove(ran, stones);
         return newPos;
     }
     public Stone deepCopy() {
@@ -156,6 +156,16 @@ public class Stone {
         result = 31 * result + Boolean.hashCode(alive);
         result = 31 * result + Boolean.hashCode(locked);
         return result;
+    }
+
+
+    public Stone deepCopy() {
+        return new Stone(
+                this.id,
+                new Position(this.position.i, this.position.j),
+                this.alive,
+                this.locked
+        );
     }
 
     @Override
