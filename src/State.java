@@ -4,23 +4,22 @@ import java.util.*;
 public class State {
 
     int turn = 0;
+    boolean played = true;
     List<Player> players = List.of(new Player(0), new Player(1), new Player(2), new Player(3));
     State parent;
     double possibility;
-    boolean played = false;
 
 
     public State(State parent) {
         this.parent = parent;
     }
 
-    public State(List<Player> players, int turn, State parent) {
+    public State(List<Player> players, int turn, boolean played, State parent) {
         this.players = players;
         this.turn = turn;
+        this.played = played;
         this.parent = parent;
     }
-
-
 
     public boolean checkParentState() {
         if (parent != null && turn == parent.turn &&
@@ -31,7 +30,6 @@ public class State {
         }
         return false;
     }
-
 
     public boolean thereIsMove(int ran,List<Stone> stones) {
         return players.get(turn).thereIsMove(ran,stones);
@@ -47,6 +45,7 @@ public class State {
     }
 
     public int getNerdNumber() {
+        played = false;
         Random r = new Random();
         int ran;
         while ((ran = r.nextInt(7)) == 0) {
@@ -56,14 +55,16 @@ public class State {
         System.out.println("there is move  : " + thereIsMove(ran,stones));
         if (!thereIsMove(ran,stones)) {
             turn = (turn + 1) % 4;
+            played = true;
+            return ran;
         }
-        System.out.println(this);
+        System.out.println("move exist played : " + played);
+        System.out.println();
         return ran;
     }
 
     public State move(int stoneId, int ran) {
         State newState = this.deepCopy();
-
         MoveType canMove2 = newState.players.get(turn).move(stoneId, ran, true,getOtherStones());
         if (canMove2 == MoveType.CANT_MOVE) {
             return null;
@@ -80,7 +81,6 @@ public class State {
         Queue<State> toDoMoveAgain = new ArrayDeque<>();
 
         for (int nerdNumber = 1; nerdNumber <= 6; nerdNumber++) {
-
             boolean flag = this.thereIsMove(nerdNumber, getOtherStones());
             if (!flag) {
                 State newState = this.deepCopy();
@@ -130,6 +130,7 @@ public class State {
                 }
             }
         }
+
         System.out.println("--------------------------------------");
         while(!toDoMoveAgain.isEmpty()) {
             State queueMoveAgain = toDoMoveAgain.poll();
@@ -159,8 +160,8 @@ public class State {
         return nextStatesList;
     }
 
-
     public boolean killStone(boolean flag) {
+        supposedToDo();
         Player player1 = players.get(turn);
         for (Player player2 : players) {
             if (player1.playerID == player2.playerID) continue;
@@ -192,13 +193,16 @@ public class State {
         return true;
     }
 
-
-    public State deepCopy() {
-        List<Player> copiedPlayers = new ArrayList<>();
-        for (Player player : players) {
-            copiedPlayers.add(player.deepCopy());
+    public void supposedToDo() {
+        if (turn == 0) {
+            System.out.println("supposed to do is RED");
+        } else if (turn == 1) {
+            System.out.println("supposed to do is GREEN");
+        } else if (turn == 2) {
+            System.out.println("supposed to do is YELLOW");
+        } else if (turn == 3) {
+            System.out.println("supposed to do is BLUE");
         }
-        return new State(copiedPlayers, turn, this);
     }
 
 
@@ -213,6 +217,13 @@ public class State {
         return stones;
     }
 
+    public State deepCopy() {
+        List<Player> copiedPlayers = new ArrayList<>();
+        for (Player player : players) {
+            copiedPlayers.add(player.deepCopy());
+        }
+        return new State(copiedPlayers, turn,false, this);
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -220,19 +231,21 @@ public class State {
         if (object == null || getClass() != object.getClass()) return false;
 
         State state = (State) object;
-        return turn == state.turn && players.equals(state.players);
+        return turn == state.turn && played == state.played && players.equals(state.players);
     }
 
     @Override
     public int hashCode() {
-        int result = turn;
-        result = 31 * result + players.hashCode();
+        int result = players.hashCode();
+        result = 31 * result + turn;
+        result = 31 * result + Boolean.hashCode(played);
         return result;
     }
 
+
     @Override
     public String toString() {
-        return "State{" + "players=" + players + ", turn=" + turn + ", played " + played + "}\n";
+        return "State{" + "players=" + players + ", turn=" + turn + ", played=" + played + '}';
     }
 
 
