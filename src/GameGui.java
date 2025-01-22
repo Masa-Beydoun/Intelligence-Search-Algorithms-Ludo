@@ -59,12 +59,12 @@ public class GameGui extends JFrame {
         }
         else if(mode.equals("simpleAlgorithm")){
             Algorithm algorithm = new Algorithm(AlgorithmType.SIMPLE);
-            this.state = algorithm.bestState(state);
+            this.state = algorithm.bestState(state, 1);
             new GameGui(state,mode);
         }
         else if(mode.equals("advancedAlgorithm")){
             Algorithm algorithm = new Algorithm(AlgorithmType.ADVANCED);
-            this.state = algorithm.bestState(state);
+            this.state = algorithm.bestState(state, 1);
             new GameGui(state,mode);
         }
 
