@@ -37,7 +37,7 @@ public class GameGui extends JFrame {
         nerdButton.setPreferredSize(new Dimension(40, 40));
         System.out.println("state gui : "+ state);
         turnLabel = new JLabel("NEXT Turn: " + (state.turn) + " ,  possibility " + state.possibility + ",  heu "+ Heuristic.calculateHeuristic(state) );
-        if(mode.equals("user"))southPanel.add(nerdButton);
+        southPanel.add(nerdButton);
         southPanel.add(turnLabel);
         if(!mode.equals("user"))southPanel.add(nextButton);
         JButton startButton = new JButton("print");

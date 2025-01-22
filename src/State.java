@@ -90,7 +90,7 @@ public class State {
         List<State> updatedStates = new ArrayList<>();
 
         for (State s : nextStatesWillBeEdited) {
-            if(s.turn == turn) continue;
+//            if(s.turn == turn) continue;
             boolean isVisited = false;
             for (State v : visited) {
                 if (s == null) continue;
@@ -165,7 +165,8 @@ public class State {
                 if (queueMoveAgain.checkParentState()) {
                     State addingState = queueMoveAgain.parent.parent.parent.deepCopy();
                     addingState.possibility = (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0);
-                    nextStatesList.add(queueMoveAgain.parent.parent.parent);
+                    addingState.turn = (turn + 1) % 4;
+                    nextStatesList.add(addingState);
                     continue;
                 }
                 for (Stone s : players.get(turn).stones) {
@@ -236,11 +237,14 @@ public class State {
                 newState.possibility = 1 / (6.0);
                 newState.turn = (turn + 1) % 4;
                 nextStatesList.add(newState);
+                continue;
             }
             if (queueMoveAgain.checkParentState()) {
-                State addingState = queueMoveAgain.parent.parent.parent.deepCopy();
+                State addingState = queueMoveAgain.deepCopy();
                 addingState.possibility = (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0);
-                nextStatesList.add(queueMoveAgain.parent.parent.parent);
+                addingState.turn = (turn + 1) % 4;
+                nextStatesList.add(addingState);
+                continue;
             }
             for (Stone s : players.get(turn).stones) {
                 State newState2 = queueMoveAgain.deepCopy();
