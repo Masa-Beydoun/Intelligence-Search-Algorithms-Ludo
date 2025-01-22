@@ -21,13 +21,12 @@ public class Algorithm {
         visited.add(root);
 
         List<State> nextStates;
-        if (this.type == AlgorithmType.SIMPLE) {
+//        if (this.type == AlgorithmType.SIMPLE) {
             nextStates = root.nerdSimpleNextState(nerdNumber);
-        }
-        else {
-            nextStates = root.nerdAdvancedNextStates(nerdNumber);
-
-        }
+//        }
+//        else {
+//            nextStates = root.nerdAdvancedNextStates(nerdNumber);
+//        }
         for (State state : nextStates) {
             double value = expectimax(state, 0, root.turn, root.turn, visited);
             if (value > bestValue) {

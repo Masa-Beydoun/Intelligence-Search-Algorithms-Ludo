@@ -45,7 +45,7 @@ public class GameGui extends JFrame {
         startButton.addActionListener(e->{
             Heuristic.printingHeuristic(this.state);
         });
-        nerdButton.addActionListener(e -> nerdActionListener());
+        nerdButton.addActionListener(e -> nerdActionListener(mode));
         nextButton.addActionListener(e -> nextActionListener(mode));
         this.add(southPanel, BorderLayout.SOUTH);
         this.add(game, BorderLayout.CENTER);
@@ -55,8 +55,9 @@ public class GameGui extends JFrame {
     }
 
     private void nextActionListener(String mode) {
-        this.dispose();
+
         if(mode.equals("simple") || mode.equals("advanced")) {
+            this.dispose();
             List<State>updatedStates = state.getListWithoutRep(mode);
             System.out.println("without rep : " + updatedStates.size());
             for (State nextState : updatedStates) {
@@ -67,7 +68,8 @@ public class GameGui extends JFrame {
             Algorithm algorithm = new Algorithm(AlgorithmType.SIMPLE);
             this.state = algorithm.bestState(state, ran);
             this.state.played = true;
-            new GameGui(state,mode);
+            refreshStones();
+//            new GameGui(state,mode);
         }
         else if(mode.equals("advancedAlgorithm")){
             Algorithm algorithm = new Algorithm(AlgorithmType.ADVANCED);
@@ -78,12 +80,19 @@ public class GameGui extends JFrame {
 
     }
 
-    public void nerdActionListener() {
+    public void nerdActionListener(String mode) {
         if (!state.played) return;
-        ran = state.getNerdNumber();
+        ran = state.getNerdNumber(mode);
         nerdButton.setIcon(nerdImages[ran - 1]);
         if (state.played) {
             turnLabel.setText("NEXT Turn: " + (state.turn));
+        }
+        if(mode.equals("simpleAlgorithm")){
+            Algorithm algorithm = new Algorithm(AlgorithmType.SIMPLE);
+            this.state = algorithm.bestState(state, ran);
+            this.state.played = true;
+            refreshStones();
+//            new GameGui(state,mode);
         }
     }
 
