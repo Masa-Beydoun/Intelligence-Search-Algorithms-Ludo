@@ -69,8 +69,9 @@ public class Player {
         if (type == MoveType.CANT_MOVE) {
             return MoveType.CANT_MOVE;
         }
-        if (stones.get(stoneId).checkInKitchen(this.playerID, stones.get(stoneId).position)) {
-            stones.remove(getStoneById(stoneId));
+        System.out.println("player id " + playerID + " stone pos " + stones.get(stoneId).position);
+        if (this.stones.get(stoneId).checkInKitchen(this.playerID, this.stones.get(stoneId).position)) {
+            this.stones.remove(getStoneById(stoneId));
             System.out.println("entered the kitchen");
             return MoveType.ENTERED_THE_KITCHEN;
         }
