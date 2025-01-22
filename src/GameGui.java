@@ -35,10 +35,16 @@ public class GameGui extends JFrame {
         refreshStones();
         southPanel = new JPanel(new FlowLayout());
         nerdButton.setPreferredSize(new Dimension(40, 40));
-        turnLabel = new JLabel("NEXT Turn: " + (state.turn) + " possibility "+(state.possibility));
+        System.out.println("state gui : "+ state);
+        turnLabel = new JLabel("NEXT Turn: " + (state.turn) + " ,  possibility " + state.possibility + ",  heu "+ Heuristic.calculateHeuristic(state) );
         if(mode.equals("user"))southPanel.add(nerdButton);
         southPanel.add(turnLabel);
         if(!mode.equals("user"))southPanel.add(nextButton);
+        JButton startButton = new JButton("print");
+        southPanel.add(startButton);
+        startButton.addActionListener(e->{
+            Heuristic.printingHeuristic(this.state);
+        });
         nerdButton.addActionListener(e -> nerdActionListener());
         nextButton.addActionListener(e -> nextActionListener(mode));
         this.add(southPanel, BorderLayout.SOUTH);
@@ -175,13 +181,10 @@ public class GameGui extends JFrame {
         System.out.println("state 1 is played : " + state1.played);
         if (!state1.played) return;
 
-        this.state = new State(null);
-        state.players = List.copyOf(state1.players);
-        state.turn = state1.turn;
-
-
-        this.state.played = true;
-        turnLabel.setText("NEXT Turn: " + (state.turn) + " possibility "+state.possibility);
+        state = state1;
+        System.out.println("stateeeeeeeeeeeeeeeeeee");
+        System.out.println(state);
+        turnLabel.setText("NEXT Turn: " + (state.turn) + " ,  possibility "+state.possibility + ",  heu "+Heuristic.calculateHeuristic(state));
         System.out.println("the move has been processed in GameGui class");
 
 //        System.out.println("next states \n " +state.nextStates());

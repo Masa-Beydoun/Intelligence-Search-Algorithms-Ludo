@@ -119,7 +119,7 @@ public class Stone {
         newPos.checkRestTillKitchen(ran, turn);
         if (newPos.equals(new Position(-1, -1))) return newPos;
 
-        System.out.println("new position " + newPos);
+//        System.out.println("new position " + newPos);
         if (!newPos.equals(position)) {
             return newPos;
         }

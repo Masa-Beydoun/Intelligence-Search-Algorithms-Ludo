@@ -173,7 +173,6 @@ public class Position {
     public void canMove(int ran ,List<Stone> stoneList) {
         boolean flag = true;
         if (i == 6 && j <= 5) {
-            System.out.println("case 1");
             while (ran != 0) {
                 if (j != 6) {
                     flag &= checkCoupleCell(i, j, stoneList);
@@ -189,7 +188,6 @@ public class Position {
             }
         }
         else if (j == 6 && i <= 5) {
-            System.out.println("case 2");
             while (ran != 0) {
                 if (j == 6) {
                     flag &= checkCoupleCell(i, j, stoneList);
@@ -209,7 +207,6 @@ public class Position {
             }
         }
         else if (j == 7 && i == 0) {
-            System.out.println("case 3");
             j++;
             flag &= checkCoupleCell(i, j, stoneList);
             ran --;
@@ -220,7 +217,6 @@ public class Position {
             }
         }
         else if (j == 8 && i <= 5) {
-            System.out.println("case 4");
             while (ran != 0) {
                 if (j == 8) {
                     flag &= checkCoupleCell(i, j, stoneList);
@@ -237,7 +233,6 @@ public class Position {
             }
         }
         else if (i == 6 && j >= 8) {
-            System.out.println("case 5");
             while (ran != 0) {
                 if(i == 6){
                     flag &= checkCoupleCell(i, j, stoneList);
@@ -260,7 +255,6 @@ public class Position {
 
         }
         else if (i == 7 && j == 14){
-            System.out.println("case 6");
             i++;
             flag &= checkCoupleCell(i, j, stoneList);
             ran --;
@@ -271,7 +265,6 @@ public class Position {
             }
         }
         else if (i == 8 && j >= 9){
-            System.out.println("case 7");
             while (ran != 0) {
                 if (j != 8){
                     flag &= checkCoupleCell(i, j, stoneList);
@@ -287,7 +280,6 @@ public class Position {
             }
         }
         else if (i >= 8 && j == 8){
-            System.out.println("case 8");
             while (ran != 0) {
                 if (j == 8){
                     flag &= checkCoupleCell(i, j, stoneList);
@@ -308,7 +300,6 @@ public class Position {
             }
         }
         else if (i == 14 && j == 7){
-            System.out.println("case 9");
             j--;
             flag &= checkCoupleCell(i, j, stoneList);
             ran --;
@@ -319,7 +310,6 @@ public class Position {
             }
         }
         else if (i >= 9 && j == 6){
-            System.out.println("case 10");
             while (ran != 0) {
                 if(j == 6){
                     flag &= checkCoupleCell(i, j, stoneList);
@@ -336,7 +326,6 @@ public class Position {
             }
         }
         else if (i == 8 && j <= 5){
-            System.out.println("case 11");
             while (ran != 0) {
                 if(i == 8){
                     flag &= checkCoupleCell(i, j, stoneList);
@@ -357,7 +346,6 @@ public class Position {
             }
         }
         else if (i == 7 && j == 0){
-            System.out.println("case 12");
             i--;
             flag &= checkCoupleCell(i, j, stoneList);
             ran --;
@@ -378,10 +366,8 @@ public class Position {
         if (i == 0) {
             int dis = 8 - j;
             if (ran <= dis) {
-                System.out.println("case 1");
                 j += ran;
             } else {
-                System.out.println("case 2");
                 j = 8;
                 i = ran - dis;
                 if (i == 6) j = 9;
@@ -389,26 +375,21 @@ public class Position {
         } else if (i == 14) {
             int dis = j - 6;
             if (ran <= dis) {
-                System.out.println("case 3");
                 j -= ran;
             } else {
-                System.out.println("case 4");
                 j = 6;
                 i = 14 - (ran - dis);
                 if (i == 8) j = 5;
             }
         } else if (i == 6) {
             if ((j + ran <= 5 && j < 5) || (j >= 9 && j + ran < 15)) {
-                System.out.println("case 5");
                 j = j + ran;
             } else {
                 if (j < 7) {
-                    System.out.println("case 6");
                     int dis = 5 - j;
                     j = 6;
                     i = i - (ran - dis);
                 } else {
-                    System.out.println("case 7");
                     int dis = 14 - j;
                     j = 14;
                     int rest = ran - dis;
@@ -423,16 +404,13 @@ public class Position {
             }
         } else if (i == 8) {
             if ((j <= 5 && j - ran >= 0) || (j > 8 && j - ran > 8)) {
-                System.out.println("case 8");
                 j = j - ran;
             } else {
                 if (j > 7) {
-                    System.out.println("case 9");
                     int dis = j - 9;
                     j = 8;
                     i = 8 + (ran - dis);
                 } else {
-                    System.out.println("case 10");
                     int dis = j;
                     j = 0;
                     int rest = ran - dis;
@@ -448,11 +426,9 @@ public class Position {
             }
         } else if (j == 6) {
             if ((i < 6 && i - ran >= 0) || (i > 8 && i - ran > 8)) {
-                System.out.println("case 11");
                 i = i - ran;
             } else {
                 if (i < 7) {
-                    System.out.println("case 12");
                     int dis = ran - i;
                     i = 0;
                     if (dis <= 2)

@@ -90,6 +90,7 @@ public class State {
         List<State> updatedStates = new ArrayList<>();
 
         for (State s : nextStatesWillBeEdited) {
+            if(s.turn == turn) continue;
             boolean isVisited = false;
             for (State v : visited) {
                 if (s == null) continue;
@@ -104,7 +105,9 @@ public class State {
                 updatedStates.add(s);
             }
         }
+
         System.out.println("next state sizes : " + updatedStates.size());
+
         return updatedStates;
     }
 
@@ -124,7 +127,8 @@ public class State {
             if (this.checkParentState()) {
                 State addingState = this.parent.parent.parent.deepCopy();
                 addingState.possibility = (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0);
-                nextStatesList.add(this.parent.parent.parent);
+                addingState.turn=(this.turn + 1) % 4;
+                nextStatesList.add(addingState);
                 continue;
             }
             for (Stone s : players.get(turn).stones) {
