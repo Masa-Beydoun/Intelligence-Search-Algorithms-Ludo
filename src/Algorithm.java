@@ -13,7 +13,7 @@ public class Algorithm {
         this.type = type;
     }
 
-    public State bestState(State root) {
+    public State bestState(State root, int nerdNumber) {
 
         double bestValue = Double.NEGATIVE_INFINITY;
         State bestState = null;
@@ -22,10 +22,10 @@ public class Algorithm {
 
         List<State> nextStates;
         if (this.type == AlgorithmType.SIMPLE) {
-            nextStates = root.simpleNextState();
+            nextStates = root.nerdSimpleNextState(nerdNumber);
         }
         else {
-            nextStates = root.advancedNextStates();
+            nextStates = root.nerdAdvancedNextStates(nerdNumber);
 
         }
         for (State state : nextStates) {

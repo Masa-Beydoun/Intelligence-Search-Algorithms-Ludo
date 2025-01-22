@@ -194,6 +194,79 @@ public class State {
 
     }
 
+    public List<State> nerdSimpleNextState(int nerdNumber) {
+        List<State> nextStatesList = new ArrayList<>();
+
+        if (!this.thereIsMove(nerdNumber, getOtherStones())) {
+            State newState = this.deepCopy();
+            newState.possibility = 1 / (6.0);
+            newState.turn = (turn + 1) % 4;
+            nextStatesList.add(newState);
+        }
+        if (this.checkParentState()) {
+            State addingState = this.parent.parent.parent.deepCopy();
+            addingState.possibility = (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0);
+            nextStatesList.add(this.parent.parent.parent);
+        }
+        for (Stone s : players.get(turn).stones) {
+            State newState = this.deepCopy();
+            MoveType canMove2 = newState.players.get(turn).move(s.id, nerdNumber, true, getOtherStones());
+            if (canMove2 == MoveType.CANT_MOVE) continue;
+            boolean killed = killStone();
+            newState.possibility = 1 / 24.0;
+            if (!(nerdNumber == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed))
+                newState.turn = (turn + 1) % 4;
+
+            nextStatesList.add(newState);
+        }
+        return nextStatesList;
+    }
+
+    public List<State> nerdAdvancedNextStates(int nerdNumber) {
+        List<State> nextStatesList = new ArrayList<>();
+        Queue<State> toDoMoveAgain = new ArrayDeque<>();
+        toDoMoveAgain.add(this);
+
+        while (!toDoMoveAgain.isEmpty()) {
+            State queueMoveAgain = toDoMoveAgain.poll();
+            if (queueMoveAgain == null) continue;
+
+            if (!queueMoveAgain.thereIsMove(nerdNumber, getOtherStones())) {
+                State newState = queueMoveAgain.deepCopy();
+                newState.possibility = 1 / (6.0);
+                newState.turn = (turn + 1) % 4;
+                nextStatesList.add(newState);
+            }
+            if (queueMoveAgain.checkParentState()) {
+                State addingState = queueMoveAgain.parent.parent.parent.deepCopy();
+                addingState.possibility = (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0);
+                nextStatesList.add(queueMoveAgain.parent.parent.parent);
+            }
+            for (Stone s : players.get(turn).stones) {
+                State newState2 = queueMoveAgain.deepCopy();
+                MoveType canMove2 = newState2.players.get(turn).move(s.id, nerdNumber, true, getOtherStones());
+                if (canMove2 == MoveType.CANT_MOVE) {
+                    continue;
+                }
+                if (newState2.parent != null && newState2.parent.possibility != 0.0)
+                    newState2.possibility = newState2.parent.possibility * 1 / 24.0;
+                else
+                    newState2.possibility = 1 / 24.0;
+                boolean killed = killStone();
+                if (nerdNumber == 6 || canMove2 == MoveType.ENTERED_THE_KITCHEN || killed) {
+                    toDoMoveAgain.add(newState2);
+                } else {
+                    newState2.turn = (turn + 1) % 4;
+                    if (newState2 == null) continue;
+                    nextStatesList.add(newState2);
+                }
+            }
+        }
+
+        return nextStatesList;
+
+    }
+
     public boolean killStone() {
         Player player1 = players.get(turn);
         for (Player player2 : players) {
