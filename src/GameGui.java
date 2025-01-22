@@ -32,7 +32,7 @@ public class GameGui extends JFrame {
     GameGui(State state, String mode) {
         this.state = state;
         createGrid(mode);
-        refreshStones();
+
         southPanel = new JPanel(new FlowLayout());
         nerdButton.setPreferredSize(new Dimension(40, 40));
         System.out.println("state gui : "+ state);
@@ -52,6 +52,7 @@ public class GameGui extends JFrame {
         this.setBounds(0, 0, 15 * 52, 15 * 50 + 50);
 //        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
+        refreshStones();
     }
 
     private void nextActionListener(String mode) {
@@ -110,6 +111,7 @@ public class GameGui extends JFrame {
                 buttons[s.position.i][s.position.j].setIcon(stonesImages[player.playerID]);
             }
         }
+        turnLabel.setText("Next turn : " + state.turn + " , possibility : "+state.possibility+ " heu : "+ Heuristic.calculateHeuristic(state) );
 
     }
 

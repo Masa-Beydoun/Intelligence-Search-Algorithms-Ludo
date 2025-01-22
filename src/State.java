@@ -201,9 +201,10 @@ public class State {
             nextStatesList.add(newState);
         }
         if (this.checkParentState()) {
-            State addingState = this.parent.parent.parent.deepCopy();
+            State addingState = this.parent.deepCopy();
             addingState.possibility = (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0) * (1 / 6.0) * (1 / 4.0);
-            nextStatesList.add(this.parent.parent.parent);
+            addingState.turn = (turn + 1) %4;
+            nextStatesList.add(addingState);
         }
         for (Stone s : players.get(turn).stones) {
             State newState = this.deepCopy();

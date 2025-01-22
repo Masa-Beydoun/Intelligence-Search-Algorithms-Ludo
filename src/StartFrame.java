@@ -5,7 +5,6 @@ public class StartFrame extends JFrame{
     private JButton userButton;
     private JButton advancedButton;
     private JButton simpleButton;
-    private JButton advancedAlgorithmButton;
     private JButton simpleAlgorithmButton;
 
     StartFrame(State state){
@@ -21,10 +20,7 @@ public class StartFrame extends JFrame{
             new GameGui(state, "simple");
             dispose();
         });
-        advancedAlgorithmButton.addActionListener(e -> {
-           dispose();
-           new GameGui(state,"advancedAlgorithm");
-        });
+
         simpleAlgorithmButton.addActionListener(e -> {
             new GameGui(state, "simpleAlgorithm");
             dispose();

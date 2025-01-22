@@ -71,6 +71,7 @@ public class Player {
         }
         if (stones.get(stoneId).checkInKitchen(this.playerID, stones.get(stoneId).position)) {
             stones.remove(getStoneById(stoneId));
+            System.out.println("entered the kitchen");
             return MoveType.ENTERED_THE_KITCHEN;
         }
 //        System.out.println("the stone has moved to new place " + getStoneById(stoneId));

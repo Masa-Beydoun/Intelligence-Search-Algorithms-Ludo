@@ -82,7 +82,27 @@ public class Stone {
     );
 
     public boolean checkInKitchen(int turn, Position pos) {
-        return pos.equals(KITCHEN_POSITIONS.get(turn));
+        if(turn == 0){
+            if(pos.i==7 && pos.j==6){
+                return true;
+            }
+        }
+        if(turn == 1){
+            if(pos.i==6 && pos.j==7){
+                return true;
+            }
+        }
+        if(turn == 2){
+            if(pos.i==7 && pos.j==8){
+                return true;
+            }
+        }
+        if(turn == 3){
+            if(pos.i==8 && pos.j==7){
+                return true;
+            }
+        }
+        return false;
     }
 
     public MoveType fullMove(int ran, int turn, boolean flag,List<Stone> stones) {
