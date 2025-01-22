@@ -45,7 +45,7 @@ public class GameGui extends JFrame {
         startButton.addActionListener(e->{
             Heuristic.printingHeuristic(this.state);
         });
-        nerdButton.addActionListener(e -> nerdActionListener(mode));
+        nerdButton.addActionListener(e -> nerdActionListener());
         nextButton.addActionListener(e -> nextActionListener(mode));
         this.add(southPanel, BorderLayout.SOUTH);
         this.add(game, BorderLayout.CENTER);
@@ -72,13 +72,13 @@ public class GameGui extends JFrame {
         else if(mode.equals("advancedAlgorithm")){
             Algorithm algorithm = new Algorithm(AlgorithmType.ADVANCED);
             this.state = algorithm.bestState(state, ran);
+            this.state.played = true;
             new GameGui(state,mode);
         }
 
     }
 
-    public void nerdActionListener(String mode) {
-//        System.out.println("nerd action : " + state.played + " mode : " + mode);
+    public void nerdActionListener() {
         if (!state.played) return;
         ran = state.getNerdNumber();
         nerdButton.setIcon(nerdImages[ran - 1]);
