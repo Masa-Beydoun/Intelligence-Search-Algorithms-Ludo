@@ -9,27 +9,27 @@ public class Player {
     public Player(int playerID) {
         this.playerID = playerID;
         if (playerID == 0) {
-            stones.add(new Stone(0, new Position(1, 1), false, false));
-            stones.add(new Stone(1, new Position(1, 4), false, false));
-            stones.add(new Stone(2, new Position(4, 1), false, false));
-            stones.add(new Stone(3, new Position(4, 4), false, false));
+            stones.add(new Stone(0, new Position(1, 1), false, false,"red"));
+            stones.add(new Stone(1, new Position(1, 4), false, false,"red"));
+            stones.add(new Stone(2, new Position(4, 1), false, false,"red"));
+            stones.add(new Stone(3, new Position(4, 4), false, false,"red"));
         } else if (playerID == 1) {
-            stones.add(new Stone(0, new Position(1, 10), false, false));
-            stones.add(new Stone(1, new Position(1, 13), false, false));
-            stones.add(new Stone(2, new Position(4, 10), false, false));
-            stones.add(new Stone(3, new Position(4, 13), false, false));
+            stones.add(new Stone(0, new Position(1, 10), false, false,"green"));
+            stones.add(new Stone(1, new Position(1, 13), false, false,"green"));
+            stones.add(new Stone(2, new Position(4, 10), false, false,"green"));
+            stones.add(new Stone(3, new Position(4, 13), false, false,"green"));
 
         } else if (playerID == 2) {
-            stones.add(new Stone(0, new Position(13, 13), false, false));
-            stones.add(new Stone(1, new Position(13, 10), false, false));
-            stones.add(new Stone(2, new Position(10, 10), false, false));
-            stones.add(new Stone(3, new Position(10, 13), false, false));
+            stones.add(new Stone(0, new Position(13, 13), false, false,"yellow"));
+            stones.add(new Stone(1, new Position(13, 10), false, false,"yellow"));
+            stones.add(new Stone(2, new Position(10, 10), false, false,"yellow"));
+            stones.add(new Stone(3, new Position(10, 13), false, false,"yellow"));
 
         } else if (playerID == 3) {
-            stones.add(new Stone(0, new Position(10, 1), false, false));
-            stones.add(new Stone(1, new Position(10, 4), false, false));
-            stones.add(new Stone(2, new Position(13, 4), false, false));
-            stones.add(new Stone(3, new Position(13, 1), false, false));
+            stones.add(new Stone(0, new Position(10, 1), false, false,"blue"));
+            stones.add(new Stone(1, new Position(10, 4), false, false,"blue"));
+            stones.add(new Stone(2, new Position(13, 4), false, false,"blue"));
+            stones.add(new Stone(3, new Position(13, 1), false, false,"blue"));
         }
     }
 
@@ -52,7 +52,7 @@ public class Player {
     public boolean thereIsMove(int ran,List<Stone> stones) {
         List<Stone> newStones = new ArrayList<>();
         for (Stone s : this.stones) {
-            newStones.add(new Stone(s.id, s.position, s.alive, s.locked));
+            newStones.add(s.deepCopy());
         }
 
         for (Stone s : newStones) {
@@ -73,7 +73,7 @@ public class Player {
             stones.remove(getStoneById(stoneId));
             return MoveType.ENTERED_THE_KITCHEN;
         }
-        System.out.println("the stone has moved to new place " + getStoneById(stoneId));
+//        System.out.println("the stone has moved to new place " + getStoneById(stoneId));
         updateLocked();
         return MoveType.MOVED;
     }

@@ -31,13 +31,13 @@ public class GameGui extends JFrame {
 
     GameGui(State state, String mode) {
         this.state = state;
-        createGrid();
+        createGrid(mode);
         refreshStones();
         southPanel = new JPanel(new FlowLayout());
         nerdButton.setPreferredSize(new Dimension(40, 40));
         System.out.println("state gui : "+ state);
         turnLabel = new JLabel("NEXT Turn: " + (state.turn) + " ,  possibility " + state.possibility + ",  heu "+ Heuristic.calculateHeuristic(state) );
-        if(mode.equals("user"))southPanel.add(nerdButton);
+        southPanel.add(nerdButton);
         southPanel.add(turnLabel);
         if(!mode.equals("user"))southPanel.add(nextButton);
         JButton startButton = new JButton("print");
@@ -45,7 +45,7 @@ public class GameGui extends JFrame {
         startButton.addActionListener(e->{
             Heuristic.printingHeuristic(this.state);
         });
-        nerdButton.addActionListener(e -> nerdActionListener());
+        nerdButton.addActionListener(e -> nerdActionListener(mode));
         nextButton.addActionListener(e -> nextActionListener(mode));
         this.add(southPanel, BorderLayout.SOUTH);
         this.add(game, BorderLayout.CENTER);
@@ -65,18 +65,20 @@ public class GameGui extends JFrame {
         }
         else if(mode.equals("simpleAlgorithm")){
             Algorithm algorithm = new Algorithm(AlgorithmType.SIMPLE);
-            this.state = algorithm.bestState(state, 1);
+            this.state = algorithm.bestState(state, ran);
+            this.state.played = true;
             new GameGui(state,mode);
         }
         else if(mode.equals("advancedAlgorithm")){
             Algorithm algorithm = new Algorithm(AlgorithmType.ADVANCED);
-            this.state = algorithm.bestState(state, 1);
+            this.state = algorithm.bestState(state, ran);
             new GameGui(state,mode);
         }
 
     }
 
-    public void nerdActionListener() {
+    public void nerdActionListener(String mode) {
+//        System.out.println("nerd action : " + state.played + " mode : " + mode);
         if (!state.played) return;
         ran = state.getNerdNumber();
         nerdButton.setIcon(nerdImages[ran - 1]);
@@ -102,7 +104,7 @@ public class GameGui extends JFrame {
 
     }
 
-    public void createGrid() {
+    public void createGrid(String mode) {
         this.setLayout(new BorderLayout());
         game = new JPanel(new GridLayout(16, 16));
         buttons = new JButton[16][16];
@@ -123,7 +125,7 @@ public class GameGui extends JFrame {
                 buttons[i][j].setText("");
                 int finalI = i;
                 int finalJ = j;
-                buttons[i][j].addActionListener(e -> moveListener(finalI, finalJ));
+                if(mode.equals("user"))buttons[i][j].addActionListener(e -> moveListener(finalI, finalJ));
 
                 if ((i == 7 && j >= 1 && j <= 5) || (i == 6 && j == 1)) buttons[i][j].setBackground(Color.red);
                 else if ((i == 7 && j >= 9 && j <= 13) || (i == 8 && j == 13))

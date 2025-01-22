@@ -6,12 +6,14 @@ public class Stone {
     Position position;
     boolean alive;
     boolean locked;
+    String color;
 
-    public Stone(int id, Position position, boolean alive, boolean locked) {
+    public Stone(int id, Position position, boolean alive, boolean locked,String color) {
         this.id = id;
         this.position = position;
         this.alive = alive;
         this.locked = locked;
+        this.color = color;
     }
 
     public void updateLocationForKill(int turn) {
@@ -135,10 +137,10 @@ public class Stone {
                 this.id,
                 new Position(this.position.i, this.position.j),
                 this.alive,
-                this.locked
+                this.locked,
+                this.color
         );
     }
-
 
     @Override
     public boolean equals(Object object) {
@@ -146,7 +148,7 @@ public class Stone {
         if (object == null || getClass() != object.getClass()) return false;
 
         Stone stone = (Stone) object;
-        return alive == stone.alive && locked == stone.locked && position.equals(stone.position);
+        return id == stone.id && alive == stone.alive && locked == stone.locked && position.equals(stone.position) && color.equals(stone.color);
     }
 
     @Override
