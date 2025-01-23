@@ -6,6 +6,7 @@ public class StartFrame extends JFrame{
     private JButton advancedButton;
     private JButton simpleButton;
     private JButton simpleAlgorithmButton;
+    private JButton advancedAlgoButton;
 
     StartFrame(State state){
         userButton.addActionListener(e -> {
@@ -23,6 +24,10 @@ public class StartFrame extends JFrame{
 
         simpleAlgorithmButton.addActionListener(e -> {
             new GameGui(state, "simpleAlgorithm");
+            dispose();
+        });
+        advancedAlgoButton.addActionListener(e -> {
+            new GameGui(state, "advancedAlgorithm");
             dispose();
         });
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

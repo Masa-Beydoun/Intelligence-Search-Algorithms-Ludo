@@ -76,7 +76,7 @@ public class GameGui extends JFrame {
             Algorithm algorithm = new Algorithm(AlgorithmType.ADVANCED);
             this.state = algorithm.bestState(state, ran);
             this.state.played = true;
-            new GameGui(state,mode);
+            refreshStones();
         }
 
     }
